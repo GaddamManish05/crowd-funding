@@ -1,0 +1,57 @@
+import {Schema,model} from 'mongoose';
+const CampaignSchema=new Schema({
+    Title:{
+        type:String,
+        required:[true]
+    },
+    Owner:{
+        type:Schema.Types.ObjectId,
+        ref:'User',
+        required:[true]
+    },
+    Description:{
+        type:String,
+        required:[true]
+    },
+    Category:{
+        enum:['Education','Health','Environment','Technology','Arts','Other'],
+        type:String,
+        required:[true]
+    },
+    GoalAmount:{
+        type:Number,
+        required:[true]
+    },
+    CurrentAmount:{
+        type:Number,
+        default:0
+    },
+    Status:{
+        enum:['pending','active','reject','completed'],
+        type:String,
+        default:'pending'
+    },
+    DeadLine:{
+        type:Date,
+        required:[true]
+    },
+    Donations:[
+        {
+            type:Schema.Types.ObjectId,
+            ref:'Donation'
+        }
+    ],
+    IsActive:{
+        type:Boolean,
+        default:true
+    },
+    ImageUrl:{
+        type:String,
+        required:[true]
+    }
+},{
+    timestamps:true,
+    strict:"throw"
+})
+const CampaignModel=model('Campaign',CampaignSchema);
+export default CampaignModel;
