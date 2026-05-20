@@ -4,6 +4,7 @@
 import React, { useEffect, useState } from 'react';
 import axios from 'axios';
 import { styles } from '../../styles/common';
+import Loader from '../common/Loader';
 
 // ==========================================
 // 2. MAIN COMPONENT DECLARATION
@@ -62,11 +63,7 @@ function DonationTable() {
         )}
 
         {/* LOADING */}
-        {loading && (
-          <p className={styles.loadingClass}>
-            Loading...
-          </p>
-        )}
+        {loading && <Loader></Loader>}
 
         <table className={styles.table}>
           <thead className={styles.tableHead}>

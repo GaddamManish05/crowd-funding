@@ -16,6 +16,7 @@ import {
 } from "lucide-react";
 import { styles } from "../../styles/common";
 
+import Loader from "../../components/common/Loader";
 // ==========================================
 // 2. MAIN COMPONENT DECLARATION
 // ==========================================

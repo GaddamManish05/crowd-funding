@@ -7,6 +7,7 @@ import { FaAddressCard } from "react-icons/fa";
 import { userAuth } from '../../store/AuthStore';
 import DonationForm from '../../components/campaign/DonationForm';
 import { styles } from '../../styles/common';
+import Loader from '../../components/common/Loader';
 
 // ==========================================
 // 2. MAIN COMPONENT DECLARATION
@@ -113,11 +114,7 @@ function CampaignTable() {
         )}
 
         {/* LOADING */}
-        {loading && (
-          <p className={styles.loadingClass}>
-            Loading...
-          </p>
-        )}
+        {loading && <Loader></Loader>}
 
         {/* LIST */}
         {filteredCampaigns.map((camp) => {

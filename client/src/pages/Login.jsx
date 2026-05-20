@@ -1,14 +1,14 @@
 // ==========================================
 // 1. IMPORTS & DEPENDENCIES
 // ==========================================
-import React, { useEffect } from "react";
+import React, { useEffect,useState } from "react";
 import { useNavigate } from "react-router";
 import { useForm } from "react-hook-form";
 import { toast } from "react-hot-toast";
 import { ShieldCheck, Rocket, HeartHandshake } from "lucide-react";
 import { userAuth } from "../store/AuthStore";
 import { styles } from "../styles/common";
-
+import Loader from "../components/common/Loader";
 // ==========================================
 // 2. MAIN COMPONENT DECLARATION
 // ==========================================
@@ -22,10 +22,17 @@ function Login() {
   const currentUser = userAuth((state) => state.currentUser);
   const login = userAuth((state) => state.login);
   const error = userAuth((state) => state.error);
+const [loading, setLoading] = useState(false);
 
   // C. Event Handlers / Business Logic
   const onUserLogin = async (userObj) => {
-    await login(userObj);
+     try {
+        setLoading(true);
+        await login(userObj);
+    }
+    finally {
+        setLoading(false);
+    }
   };
 
   // D. Lifecycle & Side Effects
@@ -149,12 +156,15 @@ function Login() {
               </div>
 
               {/* SUBMIT BUTTON */}
-              <button
-                type="submit"
-                className="w-full bg-[#0071e3] hover:bg-[#005bb5] text-white font-medium py-3 rounded-xl transition-all duration-200 shadow-md hover:shadow-lg"
-              >
-                Login
-              </button>
+              <button type="submit" disabled={loading} className={`${styles.submitBtn} flex items-center justify-center gap-3 disabled:opacity-70`}>
+              {loading ? (
+              <>
+                <div className="w-5 h-5 border-2 border-white/40 border-t-white rounded-full animate-spin" />
+                    Signing In...
+              </>
+            ) : (
+            "Login")}
+            </button>
             </form>
           </div>
         </div>

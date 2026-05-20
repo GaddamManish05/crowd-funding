@@ -10,6 +10,8 @@ import {
   FaRocket
 } from "react-icons/fa";
 
+import Loader from "../../components/common/Loader";
+
 function Overview() {
   const [campaigns,setCampaigns] = useState([]);
   const [error,setError] = useState(null);
@@ -17,7 +19,7 @@ function Overview() {
   console.log("campaigns are",campaigns);
 
   const BASE_URL = import.meta.env.VITE_API_URL;
-  
+
   useEffect(()=>{
       getCampaignDetails();
   },[])
@@ -41,7 +43,7 @@ function Overview() {
       <h1 className={`${styles.sectionTitle} text-center`}>
         Dashboard Overview
       </h1>
-      {loading && <p className={styles.loadingClass}>{loading}</p>}
+      {loading && <Loader></Loader>}
       {error && <p className={styles.errorClass}>{error}</p>}
       <div className={styles.statsContainer}>
 

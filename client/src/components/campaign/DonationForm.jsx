@@ -102,10 +102,16 @@ function DonationForm({ campaignId, onSuccess }) {
 
         {/* LOADING */}
         {loading && (
-          <p className={styles.loadingClass}>
+        <div className="flex items-center justify-center gap-3 bg-blue-50 border border-blue-100 text-blue-700 px-4 py-3 rounded-xl shadow-sm">
+          {/* SPINNER */}
+          <div className="w-5 h-5 border-2 border-blue-200 border-t-blue-600 rounded-full animate-spin" />
+
+          {/* TEXT */}
+          <p className="font-medium">
             Processing Payment...
           </p>
-        )}
+        </div>
+)}
 
         {/* TITLE */}
         <h1 className="text-2xl text-center font-semibold">
