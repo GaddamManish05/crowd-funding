@@ -17,7 +17,7 @@ const PORT = process.env.PORT || 4000;
 //middlewares
 app.use(cors({
   origin: ["http://localhost:5173",
-  "https://crowd-funding-fw34.vercel.app/"],
+  "https://crowd-funding-fw34.vercel.app"],
   credentials: true
 }));
 app.use(express.json());
