@@ -6,7 +6,7 @@ import { useNavigate } from "react-router-dom";
 import { FaEye, FaEyeSlash, FaLock } from "react-icons/fa";
 import { toast } from "react-hot-toast";
 import axios from "axios";
-import { styles } from "../../styles/common";
+import { styles } from "../../styles/common.js";
 
 // ==========================================
 // 2. MAIN COMPONENT DECLARATION

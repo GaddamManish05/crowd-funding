@@ -6,8 +6,8 @@ import { useNavigate } from "react-router";
 import { useForm } from "react-hook-form";
 import { toast } from "react-hot-toast";
 import { ShieldCheck, Rocket, HeartHandshake } from "lucide-react";
-import { userAuth } from "../store/AuthStore";
-import { styles } from "../styles/common";
+import { userAuth } from "../store/AuthStore.js";
+import { styles } from "../styles/common.js";
 import Loader from "../components/common/Loader";
 // ==========================================
 // 2. MAIN COMPONENT DECLARATION

@@ -6,7 +6,7 @@ import { useNavigate } from "react-router";
 import { useForm } from "react-hook-form";
 import axios from "axios";
 import { UserPlus, ShieldCheck, HeartHandshake } from "lucide-react";
-import { styles } from "../styles/common";
+import { styles } from "../styles/common.js";
 
 // ==========================================
 // 2. MAIN COMPONENT DECLARATION

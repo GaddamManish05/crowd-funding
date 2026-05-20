@@ -10,7 +10,7 @@ import {
   CalendarDays,
   BadgeCheck
 } from "lucide-react";
-import { userAuth } from "../../store/AuthStore";
+import { userAuth } from "../../store/AuthStore.js";
 
 // ==========================================
 // 2. MAIN COMPONENT DECLARATION

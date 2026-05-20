@@ -1,6 +1,6 @@
 import React, { useEffect, useState } from "react";
 import axios from "axios";
-import { styles } from "../../styles/common";
+import { styles } from "../../styles/common.js";
 import { toast } from "react-hot-toast";
 
 function AdminCampaigns() {

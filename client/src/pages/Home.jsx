@@ -1,5 +1,5 @@
 import React from "react";
-import { styles } from "../styles/common";
+import { styles } from "../styles/common.js";
 import { Link } from "react-router";
 
 function Home() {

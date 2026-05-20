@@ -2,7 +2,7 @@
 // 1. IMPORTS & DEPENDENCIES
 // ==========================================
 import React, { useState } from "react";
-import { userAuth } from "../../store/AuthStore";
+import { userAuth } from "../../store/AuthStore.js";
 import { useForm } from "react-hook-form";
 import { toast } from "react-hot-toast";
 import { useNavigate } from "react-router";
@@ -14,7 +14,7 @@ import {
   FileText,
   Tag
 } from "lucide-react";
-import { styles } from "../../styles/common";
+import { styles } from "../../styles/common.js";
 
 import Loader from "../../components/common/Loader";
 // ==========================================

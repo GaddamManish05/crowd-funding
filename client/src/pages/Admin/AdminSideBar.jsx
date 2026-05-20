@@ -1,6 +1,6 @@
 import React from 'react'
 import { NavLink, useNavigate } from "react-router-dom";
-import { userAuth } from "../../store/AuthStore";
+import { userAuth } from "../../store/AuthStore.js";
 
 import {
   LayoutDashboard,

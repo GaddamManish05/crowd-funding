@@ -1,6 +1,6 @@
 import axios from 'axios';
 import React, { useState, useEffect } from 'react';
-import { styles } from '../../styles/common';
+import { styles } from '../../styles/common.js';
 
 function AdminRecentDonations() {
 

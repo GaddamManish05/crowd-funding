@@ -4,9 +4,9 @@
 import React, { useState, useEffect, useMemo } from 'react';
 import axios from 'axios';
 import { FaAddressCard } from "react-icons/fa";
-import { userAuth } from '../../store/AuthStore';
-import DonationForm from '../../components/campaign/DonationForm';
-import { styles } from '../../styles/common';
+import { userAuth } from '../../store/AuthStore.js';
+import DonationForm from '../../components/campaign/DonationForm.jsx';
+import { styles } from '../../styles/common.js';
 import Loader from '../../components/common/Loader';
 
 // ==========================================

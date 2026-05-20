@@ -1,9 +1,9 @@
 import { Outlet, NavLink } from "react-router-dom";
 import { LayoutDashboard } from 'lucide-react'
 import { FaSignOutAlt} from 'react-icons/fa'
-import { styles } from "../../styles/common";
+import { styles } from "../../styles/common.js";
 import AdminSideBar from "./AdminSideBar";
-import TopBar from "../../components/dashboard/TopBar";
+import TopBar from "../../components/DashBoard/TopBar";
 function AdminLayout() {
     
     return (

@@ -4,7 +4,7 @@
 import React, { useEffect, useState } from "react";
 import { useNavigate } from "react-router";
 import { FaBell, FaUser, FaSearch } from "react-icons/fa";
-import { userAuth } from "../../store/AuthStore";
+import { userAuth } from "../../store/AuthStore.js";
 import { styles } from "../../styles/common";
 
 // ==========================================

@@ -1,8 +1,8 @@
 import React, { useEffect, useState } from "react";
 import axios from "axios";
 import { toast } from "react-hot-toast";
-import { styles } from "../../styles/common";
-import { userAuth } from "../../store/AuthStore";
+import { styles } from "../../styles/common.js";
+import { userAuth } from "../../store/AuthStore.js";
 import { useNavigate } from "react-router";
 function AdminUser() {
   const [users, setUsers] = useState([]);

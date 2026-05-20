@@ -1,6 +1,6 @@
 import React,{useState , useEffect} from "react";
-import { styles } from "../../styles/common";
-import StatsCard from "../../components/dashboard/StatsCard";
+import { styles } from "../../styles/common.js";
+import StatsCard from "../../components/Dashboard/StatsCard";
 import CampaignTable from "./CampaignsTable";
 import axios from "axios";
 import {

@@ -1,4 +1,4 @@
-import { userAuth } from '../../store/AuthStore';
+import { userAuth } from '../../store/AuthStore.js';
 import { useNavigate } from 'react-router';
 import { FaUser, FaDonate } from "react-icons/fa";
 import { MdCampaign } from "react-icons/md";
