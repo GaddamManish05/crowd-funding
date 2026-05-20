@@ -19,7 +19,7 @@ import DonationForm from "./components/campaign/DonationForm";
 
 import ProtectedRoute from "./components/Admin/ProtectedRoute";
 import AdminCampaign from "./pages/Admin/AdminCampaign";
-import AdminLayout from "./pages/Admin/Adminlayout";
+import AdminLayout from "./pages/Admin/AdminLayout";
 import AdminDonation from "./pages/Admin/AdminDonation";
 import AdminUsers from "./pages/Admin/AdminUsers";
 import AdminOverview from "./pages/Admin/AdminOverview";
