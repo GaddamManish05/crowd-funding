@@ -5,7 +5,7 @@ import exp from "express";
 import { VerifyToken } from "../Middlewares/VerifyToken.js";
 import { createCampaign, getDonationList } from "../Controllers/CampaignController.js";
 import { CheckUser } from "../Middlewares/CheckUser.js";
-import { upload } from "../Middlewares/upload.js";
+import { upload } from "../Middlewares/Upload.js";
 
 const CampaignApi = exp.Router();
 
