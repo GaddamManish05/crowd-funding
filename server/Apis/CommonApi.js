@@ -110,6 +110,10 @@ CommonApi.post("/login", async (req, res) => {
             return res.status(400).json({ message: "User not found" });
         }
 
+        if(user.IsActive === false){
+            return res.status(403).json({ message: "Account is deactivated. Please contact support." });
+        }
+        
         const isMatch = await bcrypt.compare(Password, user.Password);
 
         if (!isMatch) {

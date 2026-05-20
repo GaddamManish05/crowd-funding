@@ -9,6 +9,7 @@ import UserApi from "./Apis/UserApi.js";
 import PaymentApi from "./Apis/PaymentApi.js";
 //import middlewares
 import cookieParser from "cookie-parser";
+import helmet from "helmet";
 import cors from "cors";
 const app = express();
 const PORT = process.env.PORT || 4000;
@@ -20,6 +21,9 @@ app.use(cors({
 }));
 app.use(express.json());
 app.use(cookieParser());
+app.set("trust proxy", 1);
+app.use(helmet());
+
 
 //routes
 app.use("/user-api", UserApi);
