@@ -16,8 +16,8 @@ const CommonApi = express.Router();
 
 const tokenCookieOptions = {
     httpOnly: true,
-    sameSite: "lax",
-    secure: false,
+    sameSite: "none",
+    secure: true,
     path: "/"
 };
 
@@ -81,7 +81,7 @@ CommonApi.post("/signup", async (req, res) => {
             from: process.env.MAIL_USER,
             to: newUser.Email,
             subject: "Successfully Registered - Welcome!",
-            html: `<div style="font-family:Arial,sans-serif;max-width:600px;margin:auto;padding:20px;border:1px solid #e5e5e5;border-radius:10px;background-color:#f9f9f9;"><h2 style="color:#2e7d32;text-align:center;">Welcome to Our Platform 🎉</h2><p style="font-size:16px;color:#333;">Hello <strong>${newUser.Name}</strong>,</p><p style="font-size:15px;color:#555;line-height:1.6;">Your account has been successfully registered. We are excited to have you join us and begin your new journey.</p><div style="background-color:#ffffff;padding:15px;border-radius:8px;margin-top:20px;"><p style="margin:5px 0;"><strong>Email:</strong> ${newUser.Email}</p></div><p style="margin-top:25px;font-size:15px;color:#555;">Explore the platform and enjoy the experience 🚀</p><hr style="margin:25px 0;"/><p style="text-align:center;color:#888;font-size:13px;">Thank you for registering with us.</p></div>`
+            html: `<div style="font-family:Arial,sans-serif;max-width:600px;margin:auto;padding:20px;border:1px solid #e5e5e5;border-radius:10px;background-color:#f9f9f9;"><h2 style="color:#2e7d32;text-align:center;">Welcome to Our Platform 🎉</h2><p style="font-size:16px;color:#333;">Hello <strong>${newUser.FirstName}</strong>,</p><p style="font-size:15px;color:#555;line-height:1.6;">Your account has been successfully registered. We are excited to have you join us and begin your new journey.</p><div style="background-color:#ffffff;padding:15px;border-radius:8px;margin-top:20px;"><p style="margin:5px 0;"><strong>Email:</strong> ${newUser.Email}</p></div><p style="margin-top:25px;font-size:15px;color:#555;">Explore the platform and enjoy the experience 🚀</p><hr style="margin:25px 0;"/><p style="text-align:center;color:#888;font-size:13px;">Thank you for registering with us.</p></div>`
         });
 
         res.status(201).json({
@@ -113,7 +113,7 @@ CommonApi.post("/login", async (req, res) => {
         if(user.IsActive === false){
             return res.status(403).json({ message: "Account is deactivated. Please contact support." });
         }
-        
+
         const isMatch = await bcrypt.compare(Password, user.Password);
 
         if (!isMatch) {
