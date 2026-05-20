@@ -8,7 +8,8 @@ Content-Type: application/json
   "Password": "password",
   "PhoneNumber":"970484543"
 }
-
+###
+GET http://localhost:3000/common-api/test-mail
 ###
 POST http://localhost:3000/common-api/login
 Content-Type: application/json

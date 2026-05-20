@@ -26,10 +26,15 @@ export const getUserCampaigns = async (req, res) => {
         if (!userId) {
             return res.status(401).json({ message: "Unauthorized" });
         }
+        await CampaignModel.updateMany({DeadLine:{$lt:new Date()},
+            Status:"active"},
+            {$set:{Status:"expired"}});
+
         const campaigns = await CampaignModel
             .find({ Owner: userId })
-            .select("Title Description Category GoalAmount CurrentAmount Status DeadLine ImageUrl")
+            .select("Title Description Category GoalAmount CurrentAmount Status DeadLine ImageUrl Donations")
             .sort({ createdAt: -1 });
+            
         console.log('campaigns date : ',campaigns);
         return res.status(200).json({ payload : campaigns });
     }
@@ -46,7 +51,7 @@ export const getUserDonations = async (req, res) => {
         }
         const donations = await DonationModel
             .find({ Donor: userId })
-            .populate("Campaign", "Title GoalAmount CurrentAmount")
+            .populate("Campaign","Title GoalAmount CurrentAmount").populate("Donor","FirstName LastName Email")
             .sort({ createdAt: -1 });
         return res.status(200).json({ donations });
     }

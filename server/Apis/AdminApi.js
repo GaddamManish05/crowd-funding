@@ -30,11 +30,11 @@ AdminApi.get('/campaigns',VerifyToken,CheckAdmin,getAllCampaigns);
 // get all donations
 AdminApi.get('/donations',getDonations,VerifyToken,CheckAdmin);
 
-AdminApi.get('/all-users',getAllUsers,VerifyToken,CheckAdmin);
+AdminApi.get('/all-users',VerifyToken,CheckAdmin,getAllUsers);
 
 // soft delete the user
-AdminApi.put('/soft-delete/:id',VerifyToken,CheckAdmin);
+AdminApi.put('/soft-delete/:id',VerifyToken,CheckAdmin,deleteUser);
 
-AdminApi.put('/update-role/:id',VerifyToken,CheckAdmin);
+AdminApi.put('/update-role/:id',VerifyToken,CheckAdmin,updateRole);
 
 export default AdminApi;
