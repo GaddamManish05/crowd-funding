@@ -5,14 +5,14 @@ import { styles } from '../../styles/common';
 function AdminRecentDonations() {
 
   const [donations, setDonations] = useState([]);
-
+  const BASE_URL = import.meta.env.VITE_API_URL;
   const fetchDonations = async () => {
     try {
       let res = await axios.get(
-        "http://localhost:3000/admin-api/recent-donations",
+        `${BASE_URL}/admin-api/recent-donations`,
         { withCredentials: true }
       );
-
+      console.log("Donations : ",res.data?.payload)
       setDonations(res.data?.payload || []);
 
     } catch (err) {
@@ -45,10 +45,10 @@ function AdminRecentDonations() {
           {donations.length > 0 ? (
             donations.map((d) => (
               <tr key={d._id} className={styles.tableRow}>
-                <td className={styles.tableCell}>{d.donorName}</td>
-                <td className={styles.tableCell}>₹{d.amount}</td>
+                <td className={styles.tableCell}>{d?.Donor?.FirstName}</td>
+                <td className={styles.tableCell}>₹{d.Amount}</td>
                 <td className={styles.tableCell}>
-                  {d.campaignId?.title || "N/A"}
+                  {d.Campaign?.Title || "N/A"}
                 </td>
               </tr>
             ))

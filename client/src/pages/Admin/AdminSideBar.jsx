@@ -9,7 +9,7 @@ import {
   Users
 } from "lucide-react";
 
-import { FaDonate, FaSignOutAlt } from "react-icons/fa";
+import { FaDonate, FaSignOutAlt,FaUser } from "react-icons/fa";
 
 function AdminSideBar() {
 
@@ -22,7 +22,20 @@ function AdminSideBar() {
   };
 
   return (
-    <aside className="w-64 h-screen bg-white flex flex-col justify-between shadow-xl">
+    <aside
+    className="
+        w-64
+        min-h-screen
+        sticky
+        top-0
+        bg-white
+        flex
+        flex-col
+        justify-between
+        shadow-xl
+        overflow-y-auto
+    "
+>
 
       {/* 🔷 TOP */}
       <div>
@@ -99,6 +112,21 @@ function AdminSideBar() {
             >
               <Users size={18} />
               Users
+            </NavLink>
+          </li>
+          <li>
+            <NavLink
+              to="/admin/admin-profile"
+              className={({ isActive }) =>
+                `flex items-center gap-3 px-4 py-2.5 rounded-lg text-sm transition-all duration-200 ${
+                  isActive
+                    ? "bg-black text-white shadow-md"
+                    : "text-gray-600 hover:bg-gray-50 hover:shadow-sm"
+                }`
+              }
+            >
+              <FaUser size={18} />
+              Profile
             </NavLink>
           </li>
 

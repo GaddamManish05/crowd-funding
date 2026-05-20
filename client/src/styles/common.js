@@ -18,7 +18,7 @@ export const styles = {
 
   smallText:
     "text-sm text-[#86868b]",
-
+  
 
   /* ---------------- LAYOUT ---------------- */
 
@@ -169,13 +169,13 @@ export const styles = {
   /* ===================================================== */
 
   dashboardLayout:
-    "flex h-screen bg-[#f5f5f7]",
+    "flex min-h-screen bg-[#f5f5f7]",
 
 
   /* Sidebar */
 
   sidebar:
-    "w-64 bg-white border-r border-gray-100 flex flex-col",
+"w-64 bg-white border-r border-gray-100 flex flex-col min-h-screen sticky top-0",
 
   sidebarLogo:
     "text-lg font-semibold p-6 border-b border-gray-100",
@@ -225,10 +225,8 @@ statsValue:
 statsIconBox:
 "w-10 h-10 rounded-lg bg-blue-50 flex items-center justify-center text-blue-600 text-lg",
   /* Tables */
-
-  tableContainer:
-    "bg-white border border-gray-100 rounded-xl shadow-sm overflow-hidden",
-
+  userTableContainer: "bg-white border border-gray-100 rounded-xl shadow-sm overflow-auto max-h-[370px]",
+  tableContainer: "bg-white border border-gray-100 rounded-xl shadow-sm overflow-auto max-h-[425px]",
   table:
     "w-full text-left border-collapse",
 

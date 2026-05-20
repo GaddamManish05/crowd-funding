@@ -11,14 +11,16 @@ import {
   FaUser,
   FaSignOutAlt
 } from "react-icons/fa";
+import toast from "react-hot-toast";
 
 function Sidebar() {
 
   const navigate = useNavigate();
   const logout = userAuth((state) => state.logout);
 
-  const handleLogout = () => {
-    logout();
+  const handleLogout = async() => {
+    await logout();
+    toast.success("Logout SuccessFully")
     navigate("/login");
   };
 

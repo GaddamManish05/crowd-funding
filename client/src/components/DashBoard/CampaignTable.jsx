@@ -6,6 +6,7 @@ import axios from 'axios';
 function CampaignTable() {
   // Temporary data (later replace with API)
   const [myCampaigns,setMyCampaigns] = useState([]);
+  const BASE_URL = import.meta.env.VITE_API_URL;
   const currentUser = userAuth(state => state.currentUser);
   const formattedDate = (dateString) => {
     const newDate = new Date(dateString).toLocaleDateString('en-IN', {
@@ -22,7 +23,7 @@ function CampaignTable() {
   },[currentUser])
 
   const onCurrentUserCampaigns = async() => {
-      let response = await axios.get(`http://localhost:3000/user-api/campaigns`,{withCredentials:true});
+      let response = await axios.get(`${BASE_URL}/user-api/campaigns`,{withCredentials:true});
       console.log(response.data?.payload);
       setMyCampaigns(response.data?.payload);
   }
@@ -41,14 +42,17 @@ function CampaignTable() {
           </thead>
           <tbody>
               {/* Map through */}
-              {
+              {myCampaigns.length > 0 ?
                 myCampaigns.map((campaignObj) => <tr key={campaignObj.id} className={styles.tableRow}>
                   <td className={styles.tableCell}>{campaignObj.Title}</td>
                   <td className={styles.tableCell}>{campaignObj.GoalAmount}</td>
                   <td className={styles.tableCell}>{campaignObj.CurrentAmount}</td>
                   <td className={styles.tableCell}>{formattedDate(campaignObj.DeadLine)}</td>
-                  <td className={styles.tableCell}>{campaignObj.Status === "Active" ? '✅ Active': ' ❌ Pending'}</td>
-                </tr>)
+                  <td className={styles.tableCell}>{campaignObj.Status === "active" ? ' ✅ Active': (campaignObj.Status === "pending" ? " ⏳ Pending" :  (campaignObj.Status === "completed" ? " 🏁 Completed" : (campaignObj.Status === "expired"? " ⏰ Expired" : " ❌ Rejected")))}</td>
+                </tr>) : 
+                <tr className={styles.tableRow}>
+                  <td rowSpan={5} className={styles.tableCell}>No Campaigns Created...</td>
+                </tr>
               }
           </tbody>
       </table>

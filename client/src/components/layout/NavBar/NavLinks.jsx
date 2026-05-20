@@ -6,7 +6,7 @@ function NavLinks() {
 
   const links = [
     { name: "Home", path: "/" },
-    { name: "Explore", path: "/campaigns" },
+    { name: "Explore", path: "/explore" },
     { name: "How it Works", path: "/how-it-works" }
   ];
 

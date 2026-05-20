@@ -5,6 +5,8 @@ import RootLayout from "./components/layout/RootLayout";
 import Home from "./pages/Home";
 import SignUp from "./pages/SignUp";
 import Login from "./pages/Login";
+import Explore from "./pages/Explore";
+import HowItWorks from "./pages/HowItWorks";
 
 import DashBoard from "./pages/DashBoard/DashBoard";
 import Overview from "./pages/DashBoard/Overview";
@@ -21,6 +23,7 @@ import AdminLayout from "./pages/Admin/Adminlayout";
 import AdminDonation from "./pages/Admin/AdminDonation";
 import AdminUsers from "./pages/Admin/AdminUsers";
 import AdminOverview from "./pages/Admin/AdminOverview";
+import AdminProfile from "./pages/Admin/AdminProfile";
 
 
 const router = createBrowserRouter([
@@ -31,6 +34,14 @@ const router = createBrowserRouter([
       {
         index: true,
         element: <Home />
+      },
+      {
+        path : "explore",
+        element : <Explore></Explore>
+      },
+      {
+        path : "how-it-works",
+        element : <HowItWorks></HowItWorks>
       },
       {
         path: "sign-up",
@@ -91,7 +102,8 @@ const router = createBrowserRouter([
           { path: "overview", element: <AdminOverview /> },
           { path: "campaigns", element: <AdminCampaign /> },
           { path: "donations", element: <AdminDonation /> },
-          { path: "users", element: <AdminUsers /> }
+          { path: "users", element: <AdminUsers /> },
+          {path : "admin-profile", element : <AdminProfile></AdminProfile>}
         ]
       }
     ]

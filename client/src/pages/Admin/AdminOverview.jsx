@@ -9,9 +9,10 @@ import AdminRecentDonations from "./AdminRecentDonations";
 function AdminOverview() {
 
   const [stats, setStats] = useState({});
-  console.log(stats);
+  const BASE_URL = import.meta.env.VITE_API_URL;
+  console.log("Admin stats :",stats);
   const fetchStats = async () => {
-    const res = await axios.get("http://localhost:3000/admin-api/stats",{withCredentials : true});
+    const res = await axios.get(`${BASE_URL}/admin-api/stats`,{withCredentials : true});
     setStats(res.data);
   };
 

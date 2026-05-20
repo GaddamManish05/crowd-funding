@@ -2,18 +2,21 @@ import React, { useEffect, useState } from "react";
 import axios from "axios";
 import { toast } from "react-hot-toast";
 import { styles } from "../../styles/common";
+import { userAuth } from "../../store/AuthStore";
+import { useNavigate } from "react-router";
 function AdminUser() {
   const [users, setUsers] = useState([]);
   const [search, setSearch] = useState("");
   const [loading, setLoading] = useState(false);
+  const navigate = useNavigate();
+  const checkAuth = userAuth((state) => state.checkAuth);
 
-  const token = localStorage.getItem("token");
-
+  const BASE_URL = import.meta.env.VITE_API_URL;
   // 🔹 Fetch Users
   const fetchUsers = async () => {
     try {
       setLoading(true);
-      const res = await axios.get("http://localhost:3000/admin-api/all-users", {
+      const res = await axios.get(`${BASE_URL}/admin-api/all-users`, {
         withCredentials : true
       });
       setUsers(res.data.payload);
@@ -29,29 +32,29 @@ function AdminUser() {
     if (!window.confirm("Are you sure you want to delete this user?")) return;
 
     try {
-      await axios.delete(
-        `http://localhost:3000/admin-api/soft-delete/${id}`,
-        {
-          withCredentials : true
-        }
+      await axios.put(
+        `${BASE_URL}/admin-api/soft-delete/${id}`,{},{withCredentials : true}
       );
       toast.success("User deleted");
       fetchUsers();
     } catch (err) {
-      toast.error("Delete failed");
+      toast.error(err.message||"Delete failed");
     }
   };
-
+  
   // 🔹 Change Role
-  const handleRoleChange = async (id) => {
+  const handleRoleChange = async (id,role) => {
     try {
       await axios.put(
-        `http://localhost:3000/admin-api/update-role/${id}`,
-        {},
-        {
-          withCredentials : true
-        }
+        `${BASE_URL}/admin-api/update-role/${id}`,{Role: role === "admin" ? "user" : "admin"},{withCredentials : true}
       );
+      await checkAuth();
+      const updatedUser = userAuth.getState().currentUser;
+
+      if(updatedUser?.Role === "user"){
+        navigate("/dashboard/overview");
+      }
+
       toast.success("Role updated");
       fetchUsers();
     } catch (err) {
@@ -86,7 +89,7 @@ function AdminUser() {
       />
 
       {/* 📊 Table */}
-      <div className={styles.tableContainer}>
+      <div className={styles.userTableContainer}>
         <table className={styles.table}>
           <thead className={styles.tableHead}>
             <tr>
@@ -124,20 +127,103 @@ function AdminUser() {
                   </td>
 
                   <td className={`${styles.tableCell} space-x-2`}>
-                    <button
-                      onClick={() => handleRoleChange(user._id)}
-                      className="bg-blue-400 text-white px-3 py-1 rounded-md text-xs hover:opacity-80"
-                    >
-                      Make Admin
-                    </button>
 
-                    <button
-                      onClick={() => handleDelete(user._id)}
-                      className="bg-red-500 text-white px-3 py-1 rounded-md text-xs hover:opacity-80"
-                    >
-                      Delete
-                    </button>
-                  </td>
+    {/* ROLE BUTTON */}
+
+    <button
+
+        onClick={() =>
+            handleRoleChange(
+                user._id,
+                user.Role
+            )
+        }
+
+        className={`
+            px-3
+            py-1
+            rounded-md
+            text-xs
+            text-white
+            hover:opacity-80
+            transition-all
+            duration-200
+
+            ${
+                user.Role === "admin"
+
+                ?
+
+                "bg-purple-500"
+
+                :
+
+                "bg-blue-500"
+            }
+        `}
+    >
+
+        {
+            user.Role === "admin"
+
+            ?
+
+            "👤 Make User"
+
+            :
+
+            "🛡️ Make Admin"
+        }
+
+    </button>
+
+    {/* DELETE / RESTORE */}
+
+    <button
+
+        onClick={() =>
+            handleDelete(user._id)
+        }
+
+        className={`
+            px-3
+            py-1
+            rounded-md
+            text-xs
+            text-white
+            hover:opacity-80
+            transition-all
+            duration-200
+
+            ${
+                user.IsActive
+
+                ?
+
+                "bg-red-500"
+
+                :
+
+                "bg-green-500"
+            }
+        `}
+    >
+
+        {
+            user.IsActive
+
+            ?
+
+            "❌ Delete"
+
+            :
+
+            "♻️ Restore"
+        }
+
+    </button>
+
+</td>
                 </tr>
               ))
             )}

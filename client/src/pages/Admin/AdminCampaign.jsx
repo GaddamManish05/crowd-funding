@@ -6,9 +6,9 @@ import { toast } from "react-hot-toast";
 function AdminCampaigns() {
 
   const [campaigns, setCampaigns] = useState([]);
-
+  const BASE_URL = import.meta.env.VITE_API_URL
   const fetchCampaigns = async () => {
-    const res = await axios.get("http://localhost:3000/admin-api/campaigns", {
+    const res = await axios.get(`${BASE_URL}/admin-api/campaigns`, {
         withCredentials: true
     });
     setCampaigns(res.data.payload);
@@ -20,7 +20,7 @@ function AdminCampaigns() {
 
   // Approve
   const handleApprove = async (id) => {
-    let res = await axios.put(`http://localhost:3000/admin-api/approve-campaign/${id}`,{},{withCredentials : true});
+    let res = await axios.put(`${BASE_URL}/admin-api/approve-campaign/${id}`,{},{withCredentials : true});
     console.log(res.data?.payload)
     toast.success("Approved ✅");
     fetchCampaigns();
@@ -28,7 +28,7 @@ function AdminCampaigns() {
 
   //  Reject
   const handleReject = async (id) => {
-    await axios.put(`http://localhost:3000/admin-api/reject-campaign/${id}`,{},{withCredentials:true});
+    await axios.put(`${BASE_URL}/admin-api/reject-campaign/${id}`,{},{withCredentials:true});
     toast.error("Rejected ❌");
     fetchCampaigns();
   };
@@ -64,8 +64,8 @@ function AdminCampaigns() {
                 <td className={styles.tableCell}>
                   <span className={`px-2 py-1 text-xs rounded 
                     ${c.Status === "active" ? "bg-green-100 text-green-600" :
-                      c.Status === "pending" ? "bg-yellow-100 text-yellow-600" :
-                      "bg-red-100 text-red-600"}`}>
+                      c.Status === "pending" ? "bg-yellow-100 text-yellow-600" : c.Status === "completed"? "bg-green-100 text-green-600":
+                      "bg-red-100 text-red-600" }`}>
                     {c.Status}
                   </span>
                 </td>

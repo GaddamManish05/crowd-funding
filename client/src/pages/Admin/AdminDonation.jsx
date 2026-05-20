@@ -5,12 +5,11 @@ import { styles } from "../../styles/common";
 function AdminDonation() {
 
   const [donations, setDonations] = useState([]);
-
+  const BASE_URL = import.meta.env.VITE_API_URL;
   const fetchDonations = async () => {
     try {
-      const res = await axios.get("http://localhost:3000/admin-api/donations", {
-        withCredentials: true
-      });
+      const res = await axios.get(`${BASE_URL}/admin-api/donations`, {withCredentials: true});
+      console.log("donations : ",res.data.payload);
       setDonations(res.data.payload);
     } catch (err) {
       console.error(err.message);
@@ -38,7 +37,7 @@ function AdminDonation() {
               <th className={styles.tableHeaderCell}>Amount</th>
               <th className={styles.tableHeaderCell}>Campaign</th>
               <th className={styles.tableHeaderCell}>Date</th>
-              <th className={styles.tableHeaderCell}>Payment ID</th>
+              <th className={styles.tableHeaderCell}>Payment Status</th>
             </tr>
           </thead>
 
@@ -47,15 +46,15 @@ function AdminDonation() {
               <tr key={d._id} className={styles.tableRow}>
 
                 <td className={styles.tableCell}>
-                  {d.donorName}
+                  {d.Donor?.FirstName}
                 </td>
 
                 <td className={styles.tableCell}>
-                  ₹{d.amount}
+                  ₹{d.Amount}
                 </td>
 
                 <td className={styles.tableCell}>
-                  {d.campaignId?.title || "N/A"}
+                  {d.Campaign?.Title || "N/A"}
                 </td>
 
                 <td className={styles.tableCell}>
@@ -63,7 +62,7 @@ function AdminDonation() {
                 </td>
 
                 <td className={styles.tableCell}>
-                  {d.paymentId}
+                  {d.Status === "Success" ? "✅ Success":"❌ Failed"}
                 </td>
 
               </tr>

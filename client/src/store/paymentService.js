@@ -1,11 +1,16 @@
 import axios from "axios";
 
-export const createOrder = async (amount) => {
-  const res = await axios.post("/api/payment/create-order", { amount });
-  return res.data;
+// CREATE ORDER
+const BASE_URL = import.meta.env.VITE_API_URL;
+
+export const createOrder = async(amount) => {
+    const res = await axios.post(`${BASE_URL}/payment-api/create-order`, { amount }, { withCredentials: true });
+    return res.data;
 };
 
-export const verifyPayment = async (data) => {
-  const res = await axios.post("/api/payment/verify-payment", data);
-  return res.data;
+// VERIFY PAYMENT
+
+export const verifyPayment = async(data) => {
+    const res = await axios.post(`${BASE_URL}/payment-api/verify-payment`, data, { withCredentials: true });
+    return res.data;
 };

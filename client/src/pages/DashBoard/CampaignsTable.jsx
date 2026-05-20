@@ -1,95 +1,185 @@
-import React,{useState , useEffect} from 'react'
-import { styles } from '../../styles/common'
-import { FaAddressCard } from "react-icons/fa"
-import { } from 'react-router-dom'
-import axios from 'axios'
+// ==========================================
+// 1. IMPORTS & DEPENDENCIES
+// ==========================================
+import React, { useState, useEffect, useMemo } from 'react';
+import axios from 'axios';
+import { FaAddressCard } from "react-icons/fa";
+import { userAuth } from '../../store/AuthStore';
+import DonationForm from '../../components/campaign/DonationForm';
+import { styles } from '../../styles/common';
+
+// ==========================================
+// 2. MAIN COMPONENT DECLARATION
+// ==========================================
 function CampaignTable() {
-  const [error,setError] = useState(null);
-  const [loading,setLoading] = useState(false);
-  const [campaigns,setCampaigns] = useState([]);
-  // const navigate = useNavigate();
-  console.log(campaigns);
-  useEffect(() => {
-    donateCampaign();
-  },[])
-  const donateCampaign = async() => {
+  // A. Local Component State
+  const [error, setError] = useState(null);
+  const [loading, setLoading] = useState(false);
+  const [campaigns, setCampaigns] = useState([]);
+  const [selectedCampaign, setSelectedCampaign] = useState(null);
+  const BASE_URL = import.meta.env.VITE_API_URL;
+  // B. Global State / Context Hooks (Zustand)
+  const search = userAuth((state) => state.search);
+
+  // C. Helper Functions / Utilities
+  const formattedDate = (dateString) => {
+    return new Date(dateString).toLocaleDateString('en-IN', {
+      day: 'numeric',
+      month: 'short',
+      year: 'numeric'
+    });
+  };
+
+  // D. Event Handlers / Business Logic
+  const fetchCampaigns = async () => {
     setError(null);
     setLoading(true);
-    try{
-        let response = await axios.get('http://localhost:3000/common-api/campaigns',{withCredentials : true});
-        console.log(response.data);
-        setCampaigns(response.data?.payload);
-        
-    }catch(err){
-      setError(err.message);
-    }finally{
+
+    try {
+      const response = await axios.get(
+        `${BASE_URL}/common-api/campaigns`,
+        { withCredentials: true }
+      );
+      setCampaigns(response.data?.payload || []);
+    } catch (err) {
+      console.log(err);
+      setError(err.response?.data?.message || "Failed to fetch campaigns");
+    } finally {
       setLoading(false);
     }
   };
-  if(campaigns.length === 0){
-    return <p className={styles.cardDescription}>No Campaigns Found....</p>
+
+  // E. Lifecycle & Side Effects
+  useEffect(() => {
+    fetchCampaigns();
+  }, []);
+
+  // F. Derived State / Memoized Values
+  const filteredCampaigns = useMemo(() => {
+    return campaigns.filter((camp) => {
+      const searchText = search.toLowerCase();
+      return (
+        camp.Title?.toLowerCase().includes(searchText) ||
+        camp.Description?.toLowerCase().includes(searchText) ||
+        camp.Status?.toLowerCase().includes(searchText)
+      );
+    });
+  }, [campaigns, search]);
+
+  // Early Return Condition for Empty State
+  if (filteredCampaigns.length === 0 && !loading) {
+    return (
+      <p className={styles.cardDescription}>
+        No Campaigns Found...
+      </p>
+    );
   }
+
+  // ==========================================
+  // 3. JSX LAYOUT RETURN
+  // ==========================================
   return (
-    <div className="grid gap-6">
-      {error && <p className={styles.errorClass}>{error}</p>}
-      {loading && <p className={styles.loadingClass}>Loading...</p>}
-      {campaigns.map((camp) => {
+    <>
+      {/* DONATION MODAL */}
+      {selectedCampaign && (
+        <div className="fixed inset-0 bg-black/50 flex justify-center items-center z-50 p-4">
+          <div className="relative w-full max-w-md">
+            {/* CLOSE BUTTON */}
+            <button
+              onClick={() => setSelectedCampaign(null)}
+              className="absolute top-3 right-3 z-10 text-gray-500 hover:text-black text-xl"
+            >
+              ✕
+            </button>
 
-        const progress = Math.min(
-          (camp.CurrentAmount / camp.GoalAmount) * 100,
-          100
-        );
+            <DonationForm
+              campaignId={selectedCampaign._id}
+              onSuccess={() => {
+                fetchCampaigns();
+                setSelectedCampaign(null);
+              }}
+            />
+          </div>
+        </div>
+      )}
 
-        return (
-        <div key={camp.id} className={styles.card}>
+      {/* CAMPAIGNS LISTING CONTAINER */}
+      <div className="grid gap-6">
+        {/* ERROR */}
+        {error && (
+          <p className={styles.errorClass}>
+            {error}
+          </p>
+        )}
 
-            {/* Header */}
-            <div className="flex items-center gap-2 p-4">
+        {/* LOADING */}
+        {loading && (
+          <p className={styles.loadingClass}>
+            Loading...
+          </p>
+        )}
+
+        {/* LIST */}
+        {filteredCampaigns.map((camp) => {
+          const progress = Math.min((camp.CurrentAmount / camp.GoalAmount) * 100, 100);
+
+          return (
+            <div key={camp._id} className={styles.card}>
+              {/* HEADER */}
+              <div className="flex items-center gap-2 p-4">
                 <FaAddressCard className="text-blue-500 text-lg" />
-                <h2 className={styles.cardTitle}>{camp.Title}</h2>
-            </div>
+                <h2 className={styles.cardTitle}>
+                  {camp.Title}
+                </h2>
+              </div>
 
-            {/* Content */}
-            <div className={styles.cardContent}>
+              {/* CONTENT */}
+              <div className={styles.cardContent}>
+                <p className={styles.cardDescription}>
+                  {camp.Description}
+                </p>
 
-            <p className={styles.cardDescription}>
-                {camp.Description}
-            </p>
+                {/* AMOUNT */}
+                <p className={styles.campaignAmount}>
+                  ₹{camp.CurrentAmount} raised of ₹{camp.GoalAmount}
+                </p>
 
-              {/* Amount */}
-            <p className={styles.campaignAmount}>
-                ₹{camp.CurrentAmount} raised of ₹{camp.GoalAmount}
-            </p>
-
-              {/* Progress */}
-            <div className={`${styles.progressBarContainer} w-30`}>
-                <div
+                {/* PROGRESS */}
+                <div className={`${styles.progressBarContainer} w-30`}>
+                  <div
                     className={styles.progressBar}
                     style={{ width: `${progress}%` }}
-                />
+                  />
+                </div>
+
+                {/* EXTRA METRICS */}
+                <div className="flex justify-between text-xs text-gray-500 mt-2">
+                  <span>
+                    Status:{camp.Status === "active" ? " ✅ Active" : camp.Status === "pending" ? " ⏳ Pending" : camp.Status === "completed" ? " 🏁 Completed" : camp.Status === "expired" ? " ⏰ Expired" : " ❌ Rejected"}
+                  </span>
+                  <span>
+                    Deadline: {formattedDate(camp.DeadLine)}
+                  </span>
+                </div>
+
+                {/* DONATE BUTTON */}
+                <button
+                  onClick={() => {
+                    if (camp.Status !== "active") {
+                      return alert(camp.Status === "completed" ? "Campaign goal already achieved 🎉" : "Only active campaigns can receive donations");
+                    }
+                    setSelectedCampaign(camp);
+                  }}
+                  className={styles.donateButton}
+                >
+                  Donate Now
+                </button>
+              </div>
             </div>
-
-              {/* Extra Info */}
-            <div className="flex justify-between text-xs text-gray-500 mt-2">
-                <span>Status: {camp.Status}</span>
-                <span>Deadline: {camp.Deadline}</span>
-            </div>
-
-              {/* Button */}
-            <button
-                onClick={donateCampaign}
-                className={styles.donateButton}
-            >
-                Donate Now
-              </button>
-
-            </div>
-
-          </div>
-        );
-      })}
-
-    </div>
+          );
+        })}
+      </div>
+    </>
   );
 }
 

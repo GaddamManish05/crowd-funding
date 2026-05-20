@@ -3,13 +3,15 @@ import React,{useState,useEffect} from 'react'
 import { styles } from '../../styles/common';
 function AdminRecentCampaigns() {
     const [campaigns,setCampaigns] = useState([]);
+
+    const BASE_URL = import.meta.env.VITE_API_URL;
     useEffect(() => {
         fetchCampaigns();
     },[])
     const fetchCampaigns = async() => {
         try{
-            let response = await axios.get('http://localhost:3000/admin-api/recent-campaigns',{withCredentials : true});
-            console.log(response.data.payload);
+            let response = await axios.get(`${BASE_URL}/admin-api/recent-campaigns`,{withCredentials : true});
+            console.log("Campaigns : ",response.data.payload);
             setCampaigns(response.data?.payload);
         }catch(err){
             console.error('Fetching is Failed',err.message);
@@ -35,7 +37,7 @@ function AdminRecentCampaigns() {
         <tr key={c._id} className={styles.tableRow}>
           <td className={styles.tableCell}>{c.Title}</td>
           <td className={styles.tableCell}>₹{c.GoalAmount}</td>
-          <td className={styles.tableCell}>{c.Status}</td>
+          <td className={styles.tableCell}>{c.Status === "active" ? "✅ Active": (c.Status === "pending" ? "⏳ Pending":"❌ Rejected")}</td>
         </tr>
       ))}
     </tbody>

@@ -15,6 +15,9 @@ function Overview() {
   const [error,setError] = useState(null);
   const [loading,setLoading] = useState(false);
   console.log("campaigns are",campaigns);
+
+  const BASE_URL = import.meta.env.VITE_API_URL;
+  
   useEffect(()=>{
       getCampaignDetails();
   },[])
@@ -23,10 +26,9 @@ function Overview() {
       setError(null);
       setLoading(true);
       try{
-          let response = await axios.get('http://localhost:3000/common-api/campaigns',{withCredentials : true});
+          let response = await axios.get(`${BASE_URL}/user-api/campaigns`, { withCredentials: true });
           console.log(response?.data?.payload);
-          response?.data?.payload.filter((campaignObj) => campaignObj.status === "approved");
-          setCampaigns([response?.data?.payload]);
+          setCampaigns(response?.data?.payload);
       }catch(err){
           setError(err.response?.data?.error);
       }finally{
@@ -45,31 +47,31 @@ function Overview() {
 
         <StatsCard
           title="Total Campaigns"
-          value={5}
+          value={campaigns.length}
           icon={<FaFolderOpen />}
         />
 
         <StatsCard
           title="Funds Raised"
-          value={"$25000"}
+          value={`$ ${campaigns.reduce((sum,cur) => sum + cur.CurrentAmount,0)}`}
           icon={<FaChartLine />}
         />
 
         <StatsCard
-          title="Total Donations"
-          value={20}
+          title="Donations Received"
+          value={campaigns.reduce((sum,cur) => sum + cur.Donations.length,0)}
           icon={<FaDonate />}
         />
 
         <StatsCard
           title="Active Campaigns"
-          value={3}
+          value={campaigns.filter((campaigns) => campaigns.Status === "active").length}
           icon={<FaRocket />}
         />
 
       </div>
       <div className='mt-7'>
-          <CampaignTable campaigns = {campaigns}></CampaignTable>
+          <CampaignTable></CampaignTable>
       </div>
 
     </div>

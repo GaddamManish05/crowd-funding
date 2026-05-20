@@ -5,6 +5,9 @@ import { userAuth } from "../../../store/AuthStore";
 
 function AuthButtons() {
   const isAuthenticated = userAuth(state => state.isAuthenticated);
+  const currentUser = userAuth(state => state.currentUser)
+  console.log("Authenticate",isAuthenticated);
+  console.log("current user",currentUser);
   return (
 
     <div className="">
