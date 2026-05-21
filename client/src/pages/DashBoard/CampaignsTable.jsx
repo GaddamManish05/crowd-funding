@@ -30,7 +30,7 @@ function CampaignTable() {
       year: 'numeric'
     });
   };
-
+  const isAuthenticated = userAuth(state => state.isAuthenticated);
   // D. Event Handlers / Business Logic
   const fetchCampaigns = async () => {
     setError(null);
@@ -52,8 +52,9 @@ function CampaignTable() {
 
   // E. Lifecycle & Side Effects
   useEffect(() => {
+    if (!isAuthenticated) return;
     fetchCampaigns();
-  }, []);
+  }, [isAuthenticated]);
 
   // F. Derived State / Memoized Values
   const filteredCampaigns = useMemo(() => {
@@ -132,7 +133,7 @@ function CampaignTable() {
 
               {/* CONTENT */}
               <div className={styles.cardContent}>
-                <p className={styles.cardDescription}>
+                <p className={`${styles.cardDescription} line-clamp-3`}>
                   {camp.Description}
                 </p>
 

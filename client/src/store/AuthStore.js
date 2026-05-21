@@ -55,25 +55,27 @@ export const userAuth = create((set, get) => ({
 
     // Mark Single Notification as Read
     markNotificationAsRead: async (id) => {
-        try {
-            await axios.put(
-                `${BASE_URL}/notifications/${id}/read`,
-                {},
-                { withCredentials: true }
-            );
+    // 1. OPTIMISTIC UPDATE (UI updates instantly)
+    set((state) => ({
+        notifications: state.notifications.map((notification) =>
+            notification._id === id ? { ...notification, isRead: true } : notification
+        )
+    }));
 
-            set((state) => ({
-                notifications: state.notifications.map((notification) =>
-                    notification._id === id
-                        ? { ...notification, isRead: true }
-                        : notification
-                )
-            }));
-        } catch (err) {
-            console.log(err.response?.data?.message || err.message);
-        }
-    },
+    // 2. BACKEND SYNC
+    try {
+        await axios.put(
+            `${BASE_URL}/common-api/notifications/${id}/read`,
+            {},
+            { withCredentials: true }
+        );
+    } catch (err) {
+        console.log(err.response?.data?.message || err.message);
 
+        // 3. ROLLBACK ON FAILURE
+        await get().fetchNotifications();
+    }
+},
     // Clear Notifications
     clearNotifications: () =>
         set({

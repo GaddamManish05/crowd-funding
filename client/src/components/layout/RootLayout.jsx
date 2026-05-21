@@ -3,32 +3,36 @@ import { Outlet } from 'react-router'
 import NavBar from './NavBar/NavBar'
 import Footer from './Footer'
 import { userAuth } from '../../store/AuthStore'
+import Loader from '../common/Loader'
+
 function RootLayout() {
 
     const checkAuth = userAuth(state => state.checkAuth);
+    const loading = userAuth(state => state.loading);
 
-    const checkUserDetails = async()=>{
-        await checkAuth();
+    useEffect(() => {
+        checkAuth();
+    }, []);
+
+    if (loading) {
+        return <Loader />;
     }
 
-    useEffect(()=>{
-        checkUserDetails()
-    },[])
+    return (
+        <div className="flex flex-col min-h-screen">
+            <nav>
+                <NavBar />
+            </nav>
 
-  return (
+            <main className="">
+                <Outlet />
+            </main>
 
-    <div className="flex flex-col min-h-screen">
-        <nav>
-            <NavBar></NavBar>
-        </nav>
-        <main className="">
-            <Outlet></Outlet>
-        </main>
-        <footer className="bg-slate-900 text-white py-6 text-center">
-            <Footer />
-        </footer>
-    </div>
-  )
+            <footer className="bg-slate-900 text-white py-6 text-center">
+                <Footer />
+            </footer>
+        </div>
+    )
 }
 
 export default RootLayout
