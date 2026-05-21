@@ -21,10 +21,10 @@ export const createOrder = async (req, res) => {
 
         const order = await razorpay.orders.create(options);
 
-        res.status(200).json(order);
+        return res.status(200).json(order);
 
     } catch (error) {
-        res.status(500).json({
+        return res.status(500).json({
             message: "Error creating order",
             error: error.message
         });
@@ -120,8 +120,7 @@ export const verifyPayment = async (req, res) => {
             message:`Your donation of ₹${parsedAmount} to "${campaign.Title}" was successful`,
             type:"donation"
         });
-
-        await transporter.sendMail({
+        transporter.sendMail({
             from:process.env.MAIL_USER,
             to:req.user.Email,
             subject:" Donation Successful 🎉",
@@ -318,16 +317,17 @@ export const verifyPayment = async (req, res) => {
 
 </div>
 
-`});
+`}).then(() => console.log("Donation mail sent"))
+    .catch(err => console.log(err));
 
-        res.status(200).json({
+        return res.status(200).json({
             message: "Payment successful",
             donation
         });
 
     } catch (error) {
         console.error("VERIFY ERROR:", error);
-        res.status(500).json({
+        return res.status(500).json({
             message: "Payment verification failed",
             error: error.message
         });

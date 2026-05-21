@@ -34,10 +34,10 @@ CommonApi.get("/test-mail", async (req, res) => {
             subject: "CrowdFund Test Mail",
             text: "Nodemailer working successfully 🚀"
         });
-        res.status(200).json({ message: "Mail sent successfully" });
+        return res.status(200).json({ message: "Mail sent successfully" });
     } catch (err) {
         console.log(err);
-        res.status(500).json({ message: "Mail failed", error: err.message });
+        return res.status(500).json({ message: "Mail failed", error: err.message });
     }
 });
 
@@ -77,19 +77,19 @@ CommonApi.post("/signup", async (req, res) => {
         const CreatedUserObject = CreatedUser.toObject();
         delete CreatedUserObject.Password;
         
-        await transporter.sendMail({
+        transporter.sendMail({
             from: process.env.MAIL_USER,
             to: newUser.Email,
             subject: "Successfully Registered - Welcome!",
             html: `<div style="font-family:Arial,sans-serif;max-width:600px;margin:auto;padding:20px;border:1px solid #e5e5e5;border-radius:10px;background-color:#f9f9f9;"><h2 style="color:#2e7d32;text-align:center;">Welcome to Our Platform 🎉</h2><p style="font-size:16px;color:#333;">Hello <strong>${newUser.FirstName}</strong>,</p><p style="font-size:15px;color:#555;line-height:1.6;">Your account has been successfully registered. We are excited to have you join us and begin your new journey.</p><div style="background-color:#ffffff;padding:15px;border-radius:8px;margin-top:20px;"><p style="margin:5px 0;"><strong>Email:</strong> ${newUser.Email}</p></div><p style="margin-top:25px;font-size:15px;color:#555;">Explore the platform and enjoy the experience 🚀</p><hr style="margin:25px 0;"/><p style="text-align:center;color:#888;font-size:13px;">Thank you for registering with us.</p></div>`
         });
 
-        res.status(201).json({
+        return res.status(201).json({
             message: "User registered successfully",
             user: CreatedUserObject
         });
     } catch (error) {
-        res.status(500).json({ message: "Signup error", error: error.message });
+        return res.status(500).json({ message: "Signup error", error: error.message });
     }
 });
 
@@ -125,16 +125,19 @@ CommonApi.post("/login", async (req, res) => {
             process.env.JWT_SECRET,
             { expiresIn: "7d" }
         );
+        const userObj = user.toObject();
+        delete userObj.Password;
+
         res.cookie("token", token, {
             ...tokenCookieOptions,
             maxAge: 7 * 24 * 60 * 60 * 1000
         })
         .json({
             message: "Login successful",
-            payload: user
+            payload: userObj
         });
     } catch (error) {
-        res.status(500).json({ message: "Login error", error: error.message });
+        return res.status(500).json({ message: "Login error", error: error.message });
     }
 });
 
@@ -157,9 +160,9 @@ CommonApi.get("/campaigns", VerifyToken, async (req, res) => {
             .sort({ createdAt: -1 })
             .populate("Owner", "FirstName LastName Email");
 
-        res.status(200).json({ payload: campaigns });
+        return res.status(200).json({ payload: campaigns });
     } catch (error) {
-        res.status(500).json({
+        return res.status(500).json({
             message: "Error fetching campaigns",
             error: error.message
         });
@@ -172,10 +175,10 @@ CommonApi.get('/check-auth', VerifyToken, async (req, res) => {
         if (!user) {
             return res.status(404).json({ message: "User not found" });
         }
-        res.status(200).json({ message: "Authenticated", payload: user });
+        return res.status(200).json({ message: "Authenticated", payload: user });
     } catch (err) {
         console.log(err);
-        res.status(500).json({ message: "Server Error" });
+        return res.status(500).json({ message: "Server Error" });
     }
 });
 
@@ -205,7 +208,7 @@ CommonApi.get('/profile-stats', VerifyToken, async (req, res) => {
         });
         console.log("count : ", createdCampaignCount);
         
-        res.status(200).json({
+        return res.status(200).json({
             message: "Dashboard stats fetched",
             payload: {
                 donationCount,
@@ -215,7 +218,7 @@ CommonApi.get('/profile-stats', VerifyToken, async (req, res) => {
         });
     } catch (err) {
         console.log(err);
-        res.status(500).json({
+        return res.status(500).json({
             message: "Failed to fetch dashboard stats"
         });
     }
@@ -227,7 +230,7 @@ CommonApi.get("/notifications", VerifyToken, async (req, res) => {
     })
     .sort({ createdAt: -1 });
     console.log("notifications : ", notifications);
-    res.json({
+    return res.json({
         payload: notifications
     });
 });
@@ -240,11 +243,11 @@ CommonApi.put("/notifications/:id/read", VerifyToken, async (req, res) => {
             { new: true }
         );
 
-        res.status(200).json({
+        return res.status(200).json({
             payload: notification
         });
     } catch (error) {
-        res.status(500).json({
+        return res.status(500).json({
             message: "Unable to update notification",
             error: error.message
         });

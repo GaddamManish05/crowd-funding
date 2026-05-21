@@ -19,9 +19,9 @@ export const getPendingCampaigns = async (req, res) => {
       .populate("Owner", "FirstName LastName Email")
       .populate("Donations");
 
-    res.json({ pendingCampaigns });
+    return res.json({ pendingCampaigns });
   } catch (error) {
-    res.status(500).json({
+    return res.status(500).json({
       message: "Error fetching pending campaigns",
       error: error.message
     });
@@ -58,15 +58,16 @@ export const approveCampaign = async (req, res) => {
       to: user.Email,
       subject: "Campaign Approved 🎉",
       html: `<div style="background:#f4f7fb;padding:40px 20px;font-family:Arial,sans-serif;"><div style="max-width:600px;margin:auto;background:white;border-radius:18px;overflow:hidden;box-shadow:0 10px 30px rgba(0,0,0,0.08);"><!-- HEADER --><div style="background:linear-gradient(135deg,#0071e3,#2563eb);padding:35px;text-align:center;color:white;"><h1 style="margin:0;font-size:30px;">Campaign Approved 🎉</h1><p style="margin-top:10px;opacity:0.9;font-size:15px;">Your campaign is now live for donations 🚀</p></div><!-- BODY --><div style="padding:40px 35px;color:#333;"><h2 style="margin-top:0;font-size:24px;color:#111827;">Hello ${user.FirstName},</h2><p style="margin-top:30px;line-height:1.8;color:#4b5563;font-size:15px;">Your campaign <strong>${campaign.Title}</strong> has been approved successfully by our admin team.</p><!-- INFO BOX --><div style="background:#eff6ff;border:1px solid #bfdbfe;border-radius:12px;padding:20px;margin-top:25px;"><p style="margin:0 0 10px 0;"><strong>Campaign:</strong> ${campaign.Title}</p><p style="margin:0;">Your campaign is now visible to users and can start receiving donations.</p></div><!-- MESSAGE --><p style="margin-top:30px;line-height:1.8;color:#4b5563;font-size:15px;">We wish you success in reaching your fundraising goal and making a positive impact 🚀</p></div><!-- FOOTER --><div style="background:#f9fafb;padding:20px;text-align:center;color:#9ca3af;font-size:13px;border-top:1px solid #e5e7eb;">CrowdFunding Platform © 2026</div></div></div>`
-    });
+    }).then(() => console.log("Campaign Creation Mail Sent"))
+    .catch(err => console.log(err));;
 
-    res.json({
+    return res.json({
       message: "Campaign approved successfully",
       payload: campaign
     });
     console.log(res.message);
   } catch (error) {
-    res.status(500).json({
+    return res.status(500).json({
       message: "Error approving campaign",
       error: error.message
     });
@@ -99,14 +100,15 @@ export const rejectCampaign = async (req, res) => {
       to: user.Email,
       subject: "Campaign Rejected ❌",
       html: `<div style="background:#f4f7fb;padding:40px 20px;font-family:Arial,sans-serif;"><div style="max-width:600px;margin:auto;background:white;border-radius:18px;overflow:hidden;box-shadow:0 10px 30px rgba(0,0,0,0.08);"><!-- HEADER --><div style="background:linear-gradient(135deg,#ef4444,#dc2626);padding:35px;text-align:center;color:white;"><h1 style="margin:0;font-size:30px;">Campaign Rejected ❌</h1><p style="margin-top:10px;opacity:0.9;font-size:15px;">Admin review could not approve your campaign</p></div><!-- BODY --><div style="padding:40px 35px;color:#333;"><h2 style="margin-top:0;font-size:24px;color:#111827;">Hello ${user.FirstName},</h2><p style="margin-top:30px;line-height:1.8;color:#4b5563;font-size:15px;">Your campaign <strong>${campaign.Title}</strong> was rejected after admin review.</p><!-- INFO BOX --><div style="background:#fef2f2;border:1px solid #fecaca;border-radius:12px;padding:20px;margin-top:25px;"><p style="margin:0;color:#991b1b;">Please review your campaign details and make sure all required information is valid before submitting again.</p></div><!-- MESSAGE --><p style="margin-top:30px;line-height:1.8;color:#4b5563;font-size:15px;">Thank you for using our crowdfunding platform 🚀</p></div><!-- FOOTER --><div style="background:#f9fafb;padding:20px;text-align:center;color:#9ca3af;font-size:13px;border-top:1px solid #e5e7eb;">CrowdFunding Platform © 2026</div></div></div>`
-    });
+    }).then(() => console.log("Campaign Creation Mail Sent"))
+    .catch(err => console.log(err));;
 
-    res.json({
+    return res.json({
       message: "Campaign rejected successfully",
       payload: campaign
     });
   } catch (error) {
-    res.status(500).json({
+    return res.status(500).json({
       message: "Error rejecting campaign",
       error: error.message
     });
@@ -161,9 +163,9 @@ export const getAdminStats = async (req, res) => {
 export const getAllCampaigns = async (req, res) => {
   try {
     const campaigns = await CampaignModel.find().sort({ createdAt: -1 });
-    res.json({ payload: campaigns });
+    return res.json({ payload: campaigns });
   } catch (err) {
-    res.status(500).json({ error: err.message });
+    return res.status(500).json({ error: err.message });
   }
 };
 
@@ -175,9 +177,9 @@ export const getRecentCampaigns = async (req, res) => {
       .sort({ createdAt: -1 })
       .limit(5);
 
-    res.json({ payload: campaigns });
+    return res.json({ payload: campaigns });
   } catch (err) {
-    res.status(500).json({ error: err.message });
+    return res.status(500).json({ error: err.message });
   }
 };
 
@@ -191,9 +193,9 @@ export const getRecentDonations = async (req, res) => {
       .sort({ createdAt: -1 })
       .limit(5);
 
-    res.json({ payload: donations });
+    return res.json({ payload: donations });
   } catch (err) {
-    res.status(500).json({ error: err.message });
+    return res.status(500).json({ error: err.message });
   }
 };
 
@@ -206,9 +208,9 @@ export const getDonations = async (req, res) => {
       .populate("Campaign", "Title")
       .sort({ createdAt: -1 });
     console.log(donations);
-    res.json({ payload: donations });
+    return res.json({ payload: donations });
   } catch (err) {
-    res.status(500).json({ error: err.message });
+    return res.status(500).json({ error: err.message });
   }
 };
 
@@ -221,13 +223,13 @@ export const getAllUsers = async (req, res) => {
       return res.status(404).json({ message: "No users found" });
     }
 
-    res.status(200).json({
+    return res.status(200).json({
       message: "Users fetched successfully",
       payload: users
     });
   } catch (err) {
     console.error(err.message);
-    res.status(500).json({ message: "Server Error" });
+    return res.status(500).json({ message: "Server Error" });
   }
 };
 
@@ -240,10 +242,10 @@ export const deleteUser = async (req, res) => {
       return res.status(404).json({ message: "User Not Found" });
     }
     const updatedUser = await UserModel.findByIdAndUpdate(userId, { IsActive: !existingUser.IsActive }, { new: true });
-    res.status(200).json({ message: updatedUser.IsActive ? "User Restored" : "User Deleted", payload: updatedUser });
+    return res.status(200).json({ message: updatedUser.IsActive ? "User Restored" : "User Deleted", payload: updatedUser });
   } catch (err) {
     console.error(err.message);
-    res.status(500).json({ message: "Server Error" });
+    return res.status(500).json({ message: "Server Error" });
   }
 };
 
@@ -257,12 +259,12 @@ export const updateRole = async (req, res) => {
     if (!user) {
       return res.status(404).json({ message: "User Not Found" });
     }
-    res.status(200).json({
+    return res.status(200).json({
       message: "Users fetched successfully",
       payload: user
     });
   } catch (err) {
     console.error(err.message);
-    res.status(500).json({ message: "Server Error" });
+    return res.status(500).json({ message: "Server Error" });
   }
 };

@@ -72,9 +72,9 @@ export const ShowDonations = async (req, res) => {
             })
             .sort({ createdAt: -1 });
 
-    res.json({ campaigns });
+    return res.json({ campaigns });
   } catch (error) {
-    res.status(500).json({
+    return res.status(500).json({
       message: "Error fetching campaigns",
       error: error.message
     });
