@@ -6,7 +6,7 @@ import nodemailer from "nodemailer";
 // ==========================================
 // 2. CONFIGURATION & CONSTANTS
 // ==========================================
-const transporter = nodemailer.createTransport({
+export const transporter = nodemailer.createTransport({
 
     service: "gmail",
 
@@ -22,4 +22,3 @@ const transporter = nodemailer.createTransport({
     socketTimeout: 10000
 });
 
-export default transporter;

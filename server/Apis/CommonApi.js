@@ -10,7 +10,7 @@ import DonationModel from "../Models/DonationModel.js";
 import Notification from "../Models/NotificationModel.js";
 import { VerifyToken } from "../Middlewares/VerifyToken.js";
 import { CheckUser } from "../Middlewares/CheckUser.js";
-import transporter from '../config/Nodemailer.js'
+import {transporter} from '../config/Nodemailer.js'
 
 const CommonApi = express.Router();
 
