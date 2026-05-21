@@ -120,7 +120,8 @@ export const verifyPayment = async (req, res) => {
             message:`Your donation of ₹${parsedAmount} to "${campaign.Title}" was successful`,
             type:"donation"
         });
-        transporter.sendMail({
+        try{
+        let info = await transporter.sendMail({
             from:process.env.MAIL_USER,
             to:req.user.Email,
             subject:" Donation Successful 🎉",
@@ -317,14 +318,11 @@ export const verifyPayment = async (req, res) => {
 
 </div>
 
-`}).then(() => console.log("Donation mail sent"))
-    .catch(err => console.log(err));
-
-        return res.status(200).json({
-            message: "Payment successful",
-            donation
-        });
-
+`})
+console.log("MAIL SENT:", info.response);
+}catch(err){
+    console.log("MAIL ERROR:", err.message);
+}
     } catch (error) {
         console.error("VERIFY ERROR:", error);
         return res.status(500).json({
