@@ -52,13 +52,45 @@ function Home() {
 
           <div className={`${styles.grid3} mt-12`}>
 
-            {/* Example Cards */}
+            {[
+              {
+                title: "Medical Emergency Support",
+                description:
+                  "Help provide urgent medical treatment and support for families in need.",
+                image:
+                  "https://images.unsplash.com/photo-1584515933487-779824d29309?q=80&w=1200&auto=format&fit=crop",
+                raised: "₹85,000",
+                goal: "₹100,000",
+                progress: "85%"
+              },
 
-            {[1, 2, 3].map((item) => (
-              <div key={item} className={styles.card}>
+              {
+                title: "Education For Rural Students",
+                description:
+                  "Support education initiatives and provide resources for rural children.",
+                image:
+                  "https://images.unsplash.com/photo-1509062522246-3755977927d7?q=80&w=1200&auto=format&fit=crop",
+                raised: "₹42,000",
+                goal: "₹120,000",
+                progress: "35%"
+              },
+
+              {
+                title: "Animal Rescue Initiative",
+                description:
+                  "Help rescue injured animals and provide shelter, food, and medical care.",
+                image:
+                  "https://images.unsplash.com/photo-1517849845537-4d257902454a?q=80&w=1200&auto=format&fit=crop",
+                raised: "₹70,000",
+                goal: "₹90,000",
+                progress: "78%"
+              }
+            ].map((campaign, index) => (
+
+              <div key={index} className={styles.card}>
 
                 <img
-                  src="https://images.unsplash.com/photo-1500530855697-b586d89ba3ee"
+                  src={campaign.image}
                   alt="campaign"
                   className={styles.cardImage}
                 />
@@ -66,12 +98,11 @@ function Home() {
                 <div className={styles.cardContent}>
 
                   <h3 className={styles.cardTitle}>
-                    Innovative Tech Project
+                    {campaign.title}
                   </h3>
 
                   <p className={styles.cardDescription}>
-                    Help build the next generation of AI powered tools
-                    for developers.
+                    {campaign.description}
                   </p>
 
                   <div className="mt-4">
@@ -79,12 +110,12 @@ function Home() {
                     <div className={styles.progressBarContainer}>
                       <div
                         className={styles.progressBar}
-                        style={{ width: "60%" }}
+                        style={{ width: campaign.progress }}
                       />
                     </div>
 
                     <p className={`${styles.smallText} mt-2`}>
-                      ₹60,000 raised of ₹100,000
+                      {campaign.raised} raised of {campaign.goal}
                     </p>
 
                   </div>
@@ -92,6 +123,7 @@ function Home() {
                 </div>
 
               </div>
+
             ))}
 
           </div>

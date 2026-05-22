@@ -14,7 +14,6 @@ function CampaignTable() {
     month: 'short',
     year: 'numeric'
   });
-  console.log('newDate :',newDate);
   return newDate
   }
 // Output: 31 Mar 2026
@@ -24,7 +23,6 @@ function CampaignTable() {
 
   const onCurrentUserCampaigns = async() => {
       let response = await axios.get(`${BASE_URL}/user-api/campaigns`,{withCredentials:true});
-      console.log(response.data?.payload);
       setMyCampaigns(response.data?.payload);
   }
   
