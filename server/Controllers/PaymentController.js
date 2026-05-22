@@ -120,12 +120,16 @@ export const verifyPayment = async (req, res) => {
             message:`Your donation of ₹${parsedAmount} to "${campaign.Title}" was successful`,
             type:"donation"
         });
-        try{
-        let info = await transporter.sendMail({
-            from:process.env.MAIL_USER,
-            to:req.user.Email,
-            subject:" Donation Successful 🎉",
-            html:`
+    return res.status(200).json({
+    message: "Payment verified successfully",
+    payload: donation
+});
+    
+    transporter.sendMail({
+        from:process.env.MAIL_USER,
+        to:req.user.Email,
+        subject:" Donation Successful 🎉",
+        html:`
 
 <div
     style="
@@ -318,11 +322,14 @@ export const verifyPayment = async (req, res) => {
 
 </div>
 
-`})
-console.log("MAIL SENT:", info.response);
-}catch(err){
+`}).then((info) => {
+    console.log("MAIL SENT:", info.response);
+})
+.catch((err) => {
     console.log("MAIL ERROR:", err.message);
-}
+});
+
+
     } catch (error) {
         console.error("VERIFY ERROR:", error);
         return res.status(500).json({
