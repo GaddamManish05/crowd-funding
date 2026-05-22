@@ -35,7 +35,6 @@ export const getUserCampaigns = async (req, res) => {
             .select("Title Description Category GoalAmount CurrentAmount Status DeadLine ImageUrl Donations")
             .sort({ createdAt: -1 });
             
-        console.log('campaigns date : ',campaigns);
         return res.status(200).json({ payload : campaigns });
     }
     catch (error) {
