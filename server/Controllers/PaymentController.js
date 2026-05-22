@@ -5,6 +5,8 @@ import CampaignModel from "../Models/CampaignModel.js";
 import DonationModel from "../Models/DonationModel.js";
 import NotificationModel from "../Models/NotificationModel.js";
 import {transporter} from "../config/Nodemailer.js";
+import apiInstance from "../config/Brevo.js";
+
 // Create Razorpay order
 export const createOrder = async (req, res) => {
     try {
@@ -125,215 +127,226 @@ export const verifyPayment = async (req, res) => {
     payload: donation
 });
 setImmediate(() => {
-    console.log("MAIL USER:", process.env.MAIL_USER);
-    console.log("MAIL PASS EXISTS:", !!process.env.MAIL_PASS);
 
-    console.log("TRANSPORTER:", transporter);
+    console.log("BREVO API KEY EXISTS:", !!process.env.BREVO_API_KEY);
 
-    transporter.sendMail({
-        from:"gaddam.mani1305@gmail.com",
-        to:req.user.Email,
-        subject:" Donation Successful 🎉",
-        html:`
+    const sendSmtpEmail = {
 
-<div
-    style="
-        background:#f4f7fb;
-        padding:40px 20px;
-        font-family:Arial,sans-serif;
-    "
->
+        sender: {
+            name: "CrowdFunding Platform",
+            email: "gaddam.mani1305@gmail.com"
+        },
 
-    <div
-        style="
-            max-width:600px;
-            margin:auto;
-            background:white;
-            border-radius:18px;
-            overflow:hidden;
-            box-shadow:0 10px 30px rgba(0,0,0,0.08);
-        "
-    >
+        to: [
+            {
+                email: req.user.Email,
+                name: req.user.FirstName
+            }
+        ],
 
-        <!-- HEADER -->
+        subject: "Donation Successful 🎉",
+
+        htmlContent: `
 
         <div
             style="
-                background:linear-gradient(135deg,#0071e3,#2563eb);
-                padding:35px;
-                text-align:center;
-                color:white;
+                background:#f4f7fb;
+                padding:40px 20px;
+                font-family:Arial,sans-serif;
             "
         >
-
-            <h1
-                style="
-                    margin:0;
-                    font-size:30px;
-                "
-            >
-
-                Donation Successful 🎉
-
-            </h1>
-
-            <p
-                style="
-                    margin-top:10px;
-                    opacity:0.9;
-                    font-size:15px;
-                "
-            >
-
-                Thank you for supporting this campaign ❤️
-
-            </p>
-
-        </div>
-
-        <!-- BODY -->
-
-        <div
-            style="
-                padding:40px 35px;
-                color:#333;
-            "
-        >
-
-            <h2
-                style="
-                    margin-top:0;
-                    font-size:24px;
-                    color:#111827;
-                "
-            >
-
-                Hello ${req.user.FirstName},
-
-            </h2>
-
-            <p
-                style="
-                    line-height:1.8;
-                    color:#4b5563;
-                    font-size:15px;
-                "
-            >
-
-                Your donation of
-
-                <strong
-                    style="
-                        color:#16a34a;
-                    "
-                >
-
-                    ₹${parsedAmount}
-
-                </strong>
-
-                to campaign
-
-                <strong>
-
-                    ${campaign.Title}
-
-                </strong>
-
-                was completed successfully.
-
-            </p>
-
-            <!-- INFO BOX -->
 
             <div
                 style="
-                    background:#f9fafb;
-                    border:1px solid #e5e7eb;
-                    border-radius:12px;
-                    padding:20px;
-                    margin-top:25px;
+                    max-width:600px;
+                    margin:auto;
+                    background:white;
+                    border-radius:18px;
+                    overflow:hidden;
+                    box-shadow:0 10px 30px rgba(0,0,0,0.08);
                 "
             >
 
-                <p style="margin:0 0 10px 0;">
+                <div
+                    style="
+                        background:linear-gradient(135deg,#0071e3,#2563eb);
+                        padding:35px;
+                        text-align:center;
+                        color:white;
+                    "
+                >
 
-                    <strong>
-                        Campaign:
-                    </strong>
+                    <h1
+                        style="
+                            margin:0;
+                            font-size:30px;
+                        "
+                    >
 
-                    ${campaign.Title}
+                        Donation Successful 🎉
 
-                </p>
+                    </h1>
 
-                <p style="margin:0 0 10px 0;">
+                    <p
+                        style="
+                            margin-top:10px;
+                            opacity:0.9;
+                            font-size:15px;
+                        "
+                    >
 
-                    <strong>
-                        Amount:
-                    </strong>
+                        Thank you for supporting this campaign ❤️
 
-                    ₹${parsedAmount}
+                    </p>
 
-                </p>
+                </div>
 
-                <p style="margin:0;">
+                <div
+                    style="
+                        padding:40px 35px;
+                        color:#333;
+                    "
+                >
 
-                    <strong>
-                        Payment ID:
-                    </strong>
+                    <h2
+                        style="
+                            margin-top:0;
+                            font-size:24px;
+                            color:#111827;
+                        "
+                    >
 
-                    ${razorpay_payment_id}
+                        Hello ${req.user.FirstName},
 
-                </p>
+                    </h2>
+
+                    <p
+                        style="
+                            line-height:1.8;
+                            color:#4b5563;
+                            font-size:15px;
+                        "
+                    >
+
+                        Your donation of
+
+                        <strong
+                            style="
+                                color:#16a34a;
+                            "
+                        >
+
+                            ₹${parsedAmount}
+
+                        </strong>
+
+                        to campaign
+
+                        <strong>
+
+                            ${campaign.Title}
+
+                        </strong>
+
+                        was completed successfully.
+
+                    </p>
+
+                    <div
+                        style="
+                            background:#f9fafb;
+                            border:1px solid #e5e7eb;
+                            border-radius:12px;
+                            padding:20px;
+                            margin-top:25px;
+                        "
+                    >
+
+                        <p style="margin:0 0 10px 0;">
+
+                            <strong>
+                                Campaign:
+                            </strong>
+
+                            ${campaign.Title}
+
+                        </p>
+
+                        <p style="margin:0 0 10px 0;">
+
+                            <strong>
+                                Amount:
+                            </strong>
+
+                            ₹${parsedAmount}
+
+                        </p>
+
+                        <p style="margin:0;">
+
+                            <strong>
+                                Payment ID:
+                            </strong>
+
+                            ${razorpay_payment_id}
+
+                        </p>
+
+                    </div>
+
+                    <p
+                        style="
+                            margin-top:30px;
+                            line-height:1.8;
+                            color:#4b5563;
+                            font-size:15px;
+                        "
+                    >
+
+                        Your contribution helps campaigns grow
+                        and empowers communities through crowdfunding 🚀
+
+                    </p>
+
+                </div>
+
+                <div
+                    style="
+                        background:#f9fafb;
+                        padding:20px;
+                        text-align:center;
+                        color:#9ca3af;
+                        font-size:13px;
+                        border-top:1px solid #e5e7eb;
+                    "
+                >
+
+                    CrowdFunding Platform © 2026
+
+                </div>
 
             </div>
 
-            <!-- THANK YOU -->
-
-            <p
-                style="
-                    margin-top:30px;
-                    line-height:1.8;
-                    color:#4b5563;
-                    font-size:15px;
-                "
-            >
-
-                Your contribution helps campaigns grow
-                and empowers communities through crowdfunding 🚀
-
-            </p>
-
         </div>
 
-        <!-- FOOTER -->
+        `
+    };
 
-        <div
-            style="
-                background:#f9fafb;
-                padding:20px;
-                text-align:center;
-                color:#9ca3af;
-                font-size:13px;
-                border-top:1px solid #e5e7eb;
-            "
-        >
+    apiInstance.sendTransacEmail(sendSmtpEmail)
 
-            CrowdFunding Platform © 2026
+    .then((data) => {
 
-        </div>
+        console.log("MAIL SENT:", data);
 
-    </div>
+    })
 
-</div>
+    .catch((err) => {
 
-`}).then((info) => {
-    console.log("MAIL SENT:", info.response);
-})
-.catch((err) => {
-    console.log("MAIL ERROR:", err.message);
-});
+        console.log("MAIL ERROR:", err);
+
     });
+
+});
 
 
     } catch (error) {

@@ -6,6 +6,7 @@ import UserModel from "../Models/UserModel.js";
 import DonationModel from "../Models/DonationModel.js";
 import NotificationModel from "../Models/NotificationModel.js";
 import { transporter } from "../config/Nodemailer.js";
+import apiInstance from "../config/Brevo.js";
 
 // ==========================================
 // 2. CORE CONTROLLER FUNCTIONS
@@ -52,14 +53,116 @@ export const approveCampaign = async (req, res) => {
     });
     const user = await UserModel.findById(campaign.Owner);
 
-    transporter.sendMail({
-      from: "gaddam.mani1305@gmail.com",
-      to: user.Email,
-      subject: "Campaign Approved 🎉",
-      html: `<div style="background:#f4f7fb;padding:40px 20px;font-family:Arial,sans-serif;"><div style="max-width:600px;margin:auto;background:white;border-radius:18px;overflow:hidden;box-shadow:0 10px 30px rgba(0,0,0,0.08);"><!-- HEADER --><div style="background:linear-gradient(135deg,#0071e3,#2563eb);padding:35px;text-align:center;color:white;"><h1 style="margin:0;font-size:30px;">Campaign Approved 🎉</h1><p style="margin-top:10px;opacity:0.9;font-size:15px;">Your campaign is now live for donations 🚀</p></div><!-- BODY --><div style="padding:40px 35px;color:#333;"><h2 style="margin-top:0;font-size:24px;color:#111827;">Hello ${user.FirstName},</h2><p style="margin-top:30px;line-height:1.8;color:#4b5563;font-size:15px;">Your campaign <strong>${campaign.Title}</strong> has been approved successfully by our admin team.</p><!-- INFO BOX --><div style="background:#eff6ff;border:1px solid #bfdbfe;border-radius:12px;padding:20px;margin-top:25px;"><p style="margin:0 0 10px 0;"><strong>Campaign:</strong> ${campaign.Title}</p><p style="margin:0;">Your campaign is now visible to users and can start receiving donations.</p></div><!-- MESSAGE --><p style="margin-top:30px;line-height:1.8;color:#4b5563;font-size:15px;">We wish you success in reaching your fundraising goal and making a positive impact 🚀</p></div><!-- FOOTER --><div style="background:#f9fafb;padding:20px;text-align:center;color:#9ca3af;font-size:13px;border-top:1px solid #e5e7eb;">CrowdFunding Platform © 2026</div></div></div>`
-    }).then((info) => console.log("Campaign Creation Mail Sent :",info.response))
-    .catch(err => console.log(err));;
+    (async () => {
 
+    try {
+
+        const sendSmtpEmail = {
+
+            sender: {
+                name: "CrowdFunding Platform",
+                email: "gaddam.mani1305@gmail.com"
+            },
+
+            to: [
+                {
+                    email: user.Email,
+                    name: user.FirstName
+                }
+            ],
+
+            subject: "Campaign Approved 🎉",
+
+            htmlContent: `
+
+            <div style="background:#f4f7fb;padding:40px 20px;font-family:Arial,sans-serif;">
+
+                <div style="max-width:600px;margin:auto;background:white;border-radius:18px;overflow:hidden;box-shadow:0 10px 30px rgba(0,0,0,0.08);">
+
+                    <div style="background:linear-gradient(135deg,#0071e3,#2563eb);padding:35px;text-align:center;color:white;">
+
+                        <h1 style="margin:0;font-size:30px;">
+
+                            Campaign Approved 🎉
+
+                        </h1>
+
+                        <p style="margin-top:10px;opacity:0.9;font-size:15px;">
+
+                            Your campaign is now live for donations 🚀
+
+                        </p>
+
+                    </div>
+
+                    <div style="padding:40px 35px;color:#333;">
+
+                        <h2 style="margin-top:0;font-size:24px;color:#111827;">
+
+                            Hello ${user.FirstName},
+
+                        </h2>
+
+                        <p style="margin-top:30px;line-height:1.8;color:#4b5563;font-size:15px;">
+
+                            Your campaign
+
+                            <strong>${campaign.Title}</strong>
+
+                            has been approved successfully by our admin team.
+
+                        </p>
+
+                        <div style="background:#eff6ff;border:1px solid #bfdbfe;border-radius:12px;padding:20px;margin-top:25px;">
+
+                            <p style="margin:0 0 10px 0;">
+
+                                <strong>Campaign:</strong>
+
+                                ${campaign.Title}
+
+                            </p>
+
+                            <p style="margin:0;">
+
+                                Your campaign is now visible to users and can start receiving donations.
+
+                            </p>
+
+                        </div>
+
+                        <p style="margin-top:30px;line-height:1.8;color:#4b5563;font-size:15px;">
+
+                            We wish you success in reaching your fundraising goal and making a positive impact 🚀
+
+                        </p>
+
+                    </div>
+
+                    <div style="background:#f9fafb;padding:20px;text-align:center;color:#9ca3af;font-size:13px;border-top:1px solid #e5e7eb;">
+
+                        CrowdFunding Platform © 2026
+
+                    </div>
+
+                </div>
+
+            </div>
+
+            `
+        };
+
+        const data = await apiInstance.sendTransacEmail(sendSmtpEmail);
+
+        console.log("CAMPAIGN APPROVAL MAIL SENT:", data);
+
+    } catch(err) {
+
+        console.log("MAIL ERROR:", err);
+
+    }
+
+})();
     return res.json({
       message: "Campaign approved successfully",
       payload: campaign
@@ -93,13 +196,108 @@ export const rejectCampaign = async (req, res) => {
     
     const user = await UserModel.findById(campaign.Owner);
 
-    transporter.sendMail({
-      from: "gaddam.mani1305@gmail.com",
-      to: user.Email,
-      subject: "Campaign Rejected ❌",
-      html: `<div style="background:#f4f7fb;padding:40px 20px;font-family:Arial,sans-serif;"><div style="max-width:600px;margin:auto;background:white;border-radius:18px;overflow:hidden;box-shadow:0 10px 30px rgba(0,0,0,0.08);"><!-- HEADER --><div style="background:linear-gradient(135deg,#ef4444,#dc2626);padding:35px;text-align:center;color:white;"><h1 style="margin:0;font-size:30px;">Campaign Rejected ❌</h1><p style="margin-top:10px;opacity:0.9;font-size:15px;">Admin review could not approve your campaign</p></div><!-- BODY --><div style="padding:40px 35px;color:#333;"><h2 style="margin-top:0;font-size:24px;color:#111827;">Hello ${user.FirstName},</h2><p style="margin-top:30px;line-height:1.8;color:#4b5563;font-size:15px;">Your campaign <strong>${campaign.Title}</strong> was rejected after admin review.</p><!-- INFO BOX --><div style="background:#fef2f2;border:1px solid #fecaca;border-radius:12px;padding:20px;margin-top:25px;"><p style="margin:0;color:#991b1b;">Please review your campaign details and make sure all required information is valid before submitting again.</p></div><!-- MESSAGE --><p style="margin-top:30px;line-height:1.8;color:#4b5563;font-size:15px;">Thank you for using our crowdfunding platform 🚀</p></div><!-- FOOTER --><div style="background:#f9fafb;padding:20px;text-align:center;color:#9ca3af;font-size:13px;border-top:1px solid #e5e7eb;">CrowdFunding Platform © 2026</div></div></div>`
-    }).then(() => console.log("Campaign Creation Mail Sent"))
-    .catch(err => console.log(err));
+    (async () => {
+
+    try {
+
+        const sendSmtpEmail = {
+
+            sender: {
+                name: "CrowdFunding Platform",
+                email: "gaddam.mani1305@gmail.com"
+            },
+
+            to: [
+                {
+                    email: user.Email,
+                    name: user.FirstName
+                }
+            ],
+
+            subject: "Campaign Rejected ❌",
+
+            htmlContent: `
+
+            <div style="background:#f4f7fb;padding:40px 20px;font-family:Arial,sans-serif;">
+
+                <div style="max-width:600px;margin:auto;background:white;border-radius:18px;overflow:hidden;box-shadow:0 10px 30px rgba(0,0,0,0.08);">
+
+                    <div style="background:linear-gradient(135deg,#ef4444,#dc2626);padding:35px;text-align:center;color:white;">
+
+                        <h1 style="margin:0;font-size:30px;">
+
+                            Campaign Rejected ❌
+
+                        </h1>
+
+                        <p style="margin-top:10px;opacity:0.9;font-size:15px;">
+
+                            Admin review could not approve your campaign
+
+                        </p>
+
+                    </div>
+
+                    <div style="padding:40px 35px;color:#333;">
+
+                        <h2 style="margin-top:0;font-size:24px;color:#111827;">
+
+                            Hello ${user.FirstName},
+
+                        </h2>
+
+                        <p style="margin-top:30px;line-height:1.8;color:#4b5563;font-size:15px;">
+
+                            Your campaign
+
+                            <strong>${campaign.Title}</strong>
+
+                            was rejected after admin review.
+
+                        </p>
+
+                        <div style="background:#fef2f2;border:1px solid #fecaca;border-radius:12px;padding:20px;margin-top:25px;">
+
+                            <p style="margin:0;color:#991b1b;">
+
+                                Please review your campaign details and make sure all required information is valid before submitting again.
+
+                            </p>
+
+                        </div>
+
+                        <p style="margin-top:30px;line-height:1.8;color:#4b5563;font-size:15px;">
+
+                            Thank you for using our crowdfunding platform 🚀
+
+                        </p>
+
+                    </div>
+
+                    <div style="background:#f9fafb;padding:20px;text-align:center;color:#9ca3af;font-size:13px;border-top:1px solid #e5e7eb;">
+
+                        CrowdFunding Platform © 2026
+
+                    </div>
+
+                </div>
+
+            </div>
+
+            `
+        };
+
+        const data = await apiInstance.sendTransacEmail(sendSmtpEmail);
+
+        console.log("CAMPAIGN REJECTION MAIL SENT:", data);
+
+    } catch(err) {
+
+        console.log("MAIL ERROR:", err);
+
+    }
+
+})();
 
     return res.json({
       message: "Campaign rejected successfully",
