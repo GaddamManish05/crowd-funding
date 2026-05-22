@@ -43,7 +43,6 @@ CommonApi.get("/test-mail", async (req, res) => {
 
 //Signup 
 CommonApi.post("/signup", async (req, res) => {
-    console.log("req is : ", req.body);
     const { FirstName, LastName, Email, Password, PhoneNumber } = req.body;
 
     try {
@@ -57,8 +56,6 @@ CommonApi.post("/signup", async (req, res) => {
 
         const normalizedEmail = String(Email).trim().toLowerCase();
         const existingUser = await UserModel.findOne({ Email: normalizedEmail });
-        console.log(normalizedEmail);
-        console.log(existingUser);
         if (existingUser) {
             return res.status(400).json({ message: "User already exists" });
         }
@@ -96,7 +93,6 @@ CommonApi.post("/signup", async (req, res) => {
 
 //Login Api
 CommonApi.post("/login", async (req, res) => {
-    console.log(req.body);
     const { Email, Password } = req.body;
 
     try {
@@ -186,7 +182,6 @@ CommonApi.get('/check-auth', VerifyToken, async (req, res) => {
 CommonApi.get('/profile-stats', VerifyToken, async (req, res) => {
     try {
         const userId = req.user.userId;
-        console.log(userId);
         
         // total successful donations
         const donationCount = await DonationModel.countDocuments({
@@ -207,7 +202,6 @@ CommonApi.get('/profile-stats', VerifyToken, async (req, res) => {
         const createdCampaignCount = await CampaignModel.countDocuments({
             CreatedBy: userId
         });
-        console.log("count : ", createdCampaignCount);
         
         return res.status(200).json({
             message: "Dashboard stats fetched",
@@ -230,7 +224,6 @@ CommonApi.get("/notifications", VerifyToken, async (req, res) => {
         userId: req.user.userId
     })
     .sort({ createdAt: -1 });
-    console.log("notifications : ", notifications);
     return res.json({
         payload: notifications
     });

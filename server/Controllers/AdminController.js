@@ -30,7 +30,6 @@ export const getPendingCampaigns = async (req, res) => {
 
 // Approve campaign
 export const approveCampaign = async (req, res) => {
-  console.log(req.params.id);
   try {
     const alreadyApproved = await CampaignModel.findOne({ _id: req.params.id, Status: "active" });
     if (alreadyApproved) {
@@ -58,14 +57,13 @@ export const approveCampaign = async (req, res) => {
       to: user.Email,
       subject: "Campaign Approved 🎉",
       html: `<div style="background:#f4f7fb;padding:40px 20px;font-family:Arial,sans-serif;"><div style="max-width:600px;margin:auto;background:white;border-radius:18px;overflow:hidden;box-shadow:0 10px 30px rgba(0,0,0,0.08);"><!-- HEADER --><div style="background:linear-gradient(135deg,#0071e3,#2563eb);padding:35px;text-align:center;color:white;"><h1 style="margin:0;font-size:30px;">Campaign Approved 🎉</h1><p style="margin-top:10px;opacity:0.9;font-size:15px;">Your campaign is now live for donations 🚀</p></div><!-- BODY --><div style="padding:40px 35px;color:#333;"><h2 style="margin-top:0;font-size:24px;color:#111827;">Hello ${user.FirstName},</h2><p style="margin-top:30px;line-height:1.8;color:#4b5563;font-size:15px;">Your campaign <strong>${campaign.Title}</strong> has been approved successfully by our admin team.</p><!-- INFO BOX --><div style="background:#eff6ff;border:1px solid #bfdbfe;border-radius:12px;padding:20px;margin-top:25px;"><p style="margin:0 0 10px 0;"><strong>Campaign:</strong> ${campaign.Title}</p><p style="margin:0;">Your campaign is now visible to users and can start receiving donations.</p></div><!-- MESSAGE --><p style="margin-top:30px;line-height:1.8;color:#4b5563;font-size:15px;">We wish you success in reaching your fundraising goal and making a positive impact 🚀</p></div><!-- FOOTER --><div style="background:#f9fafb;padding:20px;text-align:center;color:#9ca3af;font-size:13px;border-top:1px solid #e5e7eb;">CrowdFunding Platform © 2026</div></div></div>`
-    }).then(() => console.log("Campaign Creation Mail Sent"))
+    }).then((info) => console.log("Campaign Creation Mail Sent :",info.response))
     .catch(err => console.log(err));;
 
     return res.json({
       message: "Campaign approved successfully",
       payload: campaign
     });
-    console.log(res.message);
   } catch (error) {
     return res.status(500).json({
       message: "Error approving campaign",
@@ -207,7 +205,6 @@ export const getDonations = async (req, res) => {
       .populate("Donor", "FirstName LastName Email")
       .populate("Campaign", "Title")
       .sort({ createdAt: -1 });
-    console.log(donations);
     return res.json({ payload: donations });
   } catch (err) {
     return res.status(500).json({ error: err.message });
@@ -252,7 +249,6 @@ export const deleteUser = async (req, res) => {
 // Update user role
 export const updateRole = async (req, res) => {
   const userId = req.params.id;
-  console.log(userId);
   const { Role } = req.body;
   try {
     const user = await UserModel.findByIdAndUpdate(userId, { Role: Role }, { new: true });
