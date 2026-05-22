@@ -124,6 +124,7 @@ export const verifyPayment = async (req, res) => {
     message: "Payment verified successfully",
     payload: donation
 });
+setImmediate(() => {
     console.log("MAIL USER:", process.env.MAIL_USER);
     console.log("MAIL PASS EXISTS:", !!process.env.MAIL_PASS);
 
@@ -332,6 +333,7 @@ export const verifyPayment = async (req, res) => {
 .catch((err) => {
     console.log("MAIL ERROR:", err.message);
 });
+    });
 
 
     } catch (error) {
