@@ -124,9 +124,13 @@ export const verifyPayment = async (req, res) => {
     message: "Payment verified successfully",
     payload: donation
 });
-    
+    console.log("MAIL USER:", process.env.MAIL_USER);
+    console.log("MAIL PASS EXISTS:", !!process.env.MAIL_PASS);
+
+    console.log("TRANSPORTER:", transporter);
+
     transporter.sendMail({
-        from:process.env.MAIL_USER,
+        from:"gaddam.mani1305@gmail.com",
         to:req.user.Email,
         subject:" Donation Successful 🎉",
         html:`
