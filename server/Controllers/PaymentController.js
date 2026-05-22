@@ -122,230 +122,227 @@ export const verifyPayment = async (req, res) => {
             message:`Your donation of ₹${parsedAmount} to "${campaign.Title}" was successful`,
             type:"donation"
         });
-    return res.status(200).json({
-    message: "Payment verified successfully",
-    payload: donation
-});
-setImmediate(() => {
+    (async () => {
 
-    console.log("BREVO API KEY EXISTS:", !!process.env.BREVO_API_KEY);
+    try {
 
-    const sendSmtpEmail = {
+        const sendSmtpEmail = {
 
-        sender: {
-            name: "CrowdFunding Platform",
-            email: "gaddam.mani1305@gmail.com"
-        },
+            sender: {
+                name: "CrowdFunding Platform",
+                email: "gaddam.mani1305@gmail.com"
+            },
 
-        to: [
-            {
-                email: req.user.Email,
-                name: req.user.FirstName
-            }
-        ],
+            to: [
+                {
+                    email: req.user.Email,
+                    name: req.user.FirstName
+                }
+            ],
 
-        subject: "Donation Successful 🎉",
+            subject: "Donation Successful 🎉",
 
-        htmlContent: `
+            htmlContent: `
+
+<div
+    style="
+        background:#f4f7fb;
+        padding:40px 20px;
+        font-family:Arial,sans-serif;
+    "
+>
+
+    <div
+        style="
+            max-width:600px;
+            margin:auto;
+            background:white;
+            border-radius:18px;
+            overflow:hidden;
+            box-shadow:0 10px 30px rgba(0,0,0,0.08);
+        "
+    >
 
         <div
             style="
-                background:#f4f7fb;
-                padding:40px 20px;
-                font-family:Arial,sans-serif;
+                background:linear-gradient(135deg,#0071e3,#2563eb);
+                padding:35px;
+                text-align:center;
+                color:white;
             "
         >
 
-            <div
+            <h1
                 style="
-                    max-width:600px;
-                    margin:auto;
-                    background:white;
-                    border-radius:18px;
-                    overflow:hidden;
-                    box-shadow:0 10px 30px rgba(0,0,0,0.08);
+                    margin:0;
+                    font-size:30px;
                 "
             >
 
-                <div
-                    style="
-                        background:linear-gradient(135deg,#0071e3,#2563eb);
-                        padding:35px;
-                        text-align:center;
-                        color:white;
-                    "
-                >
+                Donation Successful 🎉
 
-                    <h1
-                        style="
-                            margin:0;
-                            font-size:30px;
-                        "
-                    >
+            </h1>
 
-                        Donation Successful 🎉
+            <p
+                style="
+                    margin-top:10px;
+                    opacity:0.9;
+                    font-size:15px;
+                "
+            >
 
-                    </h1>
+                Thank you for supporting this campaign ❤️
 
-                    <p
-                        style="
-                            margin-top:10px;
-                            opacity:0.9;
-                            font-size:15px;
-                        "
-                    >
-
-                        Thank you for supporting this campaign ❤️
-
-                    </p>
-
-                </div>
-
-                <div
-                    style="
-                        padding:40px 35px;
-                        color:#333;
-                    "
-                >
-
-                    <h2
-                        style="
-                            margin-top:0;
-                            font-size:24px;
-                            color:#111827;
-                        "
-                    >
-
-                        Hello ${req.user.FirstName},
-
-                    </h2>
-
-                    <p
-                        style="
-                            line-height:1.8;
-                            color:#4b5563;
-                            font-size:15px;
-                        "
-                    >
-
-                        Your donation of
-
-                        <strong
-                            style="
-                                color:#16a34a;
-                            "
-                        >
-
-                            ₹${parsedAmount}
-
-                        </strong>
-
-                        to campaign
-
-                        <strong>
-
-                            ${campaign.Title}
-
-                        </strong>
-
-                        was completed successfully.
-
-                    </p>
-
-                    <div
-                        style="
-                            background:#f9fafb;
-                            border:1px solid #e5e7eb;
-                            border-radius:12px;
-                            padding:20px;
-                            margin-top:25px;
-                        "
-                    >
-
-                        <p style="margin:0 0 10px 0;">
-
-                            <strong>
-                                Campaign:
-                            </strong>
-
-                            ${campaign.Title}
-
-                        </p>
-
-                        <p style="margin:0 0 10px 0;">
-
-                            <strong>
-                                Amount:
-                            </strong>
-
-                            ₹${parsedAmount}
-
-                        </p>
-
-                        <p style="margin:0;">
-
-                            <strong>
-                                Payment ID:
-                            </strong>
-
-                            ${razorpay_payment_id}
-
-                        </p>
-
-                    </div>
-
-                    <p
-                        style="
-                            margin-top:30px;
-                            line-height:1.8;
-                            color:#4b5563;
-                            font-size:15px;
-                        "
-                    >
-
-                        Your contribution helps campaigns grow
-                        and empowers communities through crowdfunding 🚀
-
-                    </p>
-
-                </div>
-
-                <div
-                    style="
-                        background:#f9fafb;
-                        padding:20px;
-                        text-align:center;
-                        color:#9ca3af;
-                        font-size:13px;
-                        border-top:1px solid #e5e7eb;
-                    "
-                >
-
-                    CrowdFunding Platform © 2026
-
-                </div>
-
-            </div>
+            </p>
 
         </div>
 
-        `
-    };
+        <div
+            style="
+                padding:40px 35px;
+                color:#333;
+            "
+        >
 
-    apiInstance.sendTransacEmail(sendSmtpEmail)
+            <h2
+                style="
+                    margin-top:0;
+                    font-size:24px;
+                    color:#111827;
+                "
+            >
 
-    .then((data) => {
+                Hello ${req.user.FirstName},
 
-        console.log("MAIL SENT:", data);
+            </h2>
 
-    })
+            <p
+                style="
+                    line-height:1.8;
+                    color:#4b5563;
+                    font-size:15px;
+                "
+            >
 
-    .catch((err) => {
+                Your donation of
 
-        console.log("MAIL ERROR:", err);
+                <strong
+                    style="
+                        color:#16a34a;
+                    "
+                >
 
-    });
+                    ₹${parsedAmount}
 
+                </strong>
+
+                to campaign
+
+                <strong>
+
+                    ${campaign.Title}
+
+                </strong>
+
+                was completed successfully.
+
+            </p>
+
+            <div
+                style="
+                    background:#f9fafb;
+                    border:1px solid #e5e7eb;
+                    border-radius:12px;
+                    padding:20px;
+                    margin-top:25px;
+                "
+            >
+
+                <p style="margin:0 0 10px 0;">
+
+                    <strong>
+                        Campaign:
+                    </strong>
+
+                    ${campaign.Title}
+
+                </p>
+
+                <p style="margin:0 0 10px 0;">
+
+                    <strong>
+                        Amount:
+                    </strong>
+
+                    ₹${parsedAmount}
+
+                </p>
+
+                <p style="margin:0;">
+
+                    <strong>
+                        Payment ID:
+                    </strong>
+
+                    ${razorpay_payment_id}
+
+                </p>
+
+            </div>
+
+            <p
+                style="
+                    margin-top:30px;
+                    line-height:1.8;
+                    color:#4b5563;
+                    font-size:15px;
+                "
+            >
+
+                Your contribution helps campaigns grow
+                and empowers communities through crowdfunding 🚀
+
+            </p>
+
+        </div>
+
+        <div
+            style="
+                background:#f9fafb;
+                padding:20px;
+                text-align:center;
+                color:#9ca3af;
+                font-size:13px;
+                border-top:1px solid #e5e7eb;
+            "
+        >
+
+            CrowdFunding Platform © 2026
+
+        </div>
+
+    </div>
+
+</div>
+
+`
+        };
+
+        const data = await apiInstance.sendTransacEmail(sendSmtpEmail);
+
+        console.log("DONATION MAIL SENT:", data);
+
+    } catch(err) {
+
+        console.log("DONATION MAIL ERROR:", err);
+
+    }
+
+})();
+
+return res.status(200).json({
+    message: "Payment verified successfully",
+    payload: donation
 });
 
 
