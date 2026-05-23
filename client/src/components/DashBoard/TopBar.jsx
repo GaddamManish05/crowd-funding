@@ -31,6 +31,10 @@ function TopBar() {
   // E. Lifecycle & Side Effects
   useEffect(() => {
     fetchNotifications();
+    const interval = setInterval(() => {
+        fetchNotifications();
+    }, 10000);
+    return () => clearInterval(interval);
   }, []);
 
   // Search Debounce Logic
@@ -97,9 +101,9 @@ function TopBar() {
                   {notifications.map((notification) => (
                     <div
                       key={notification._id}
-                      onClick={() => {
+                      onClick={async () => {
                         if (!notification.isRead) {
-                          markNotificationAsRead(notification._id);
+                          await markNotificationAsRead(notification._id);
                         }
                       }}
                       className={`p-4 border-b hover:bg-gray-50 transition cursor-pointer ${
@@ -141,7 +145,7 @@ function TopBar() {
           className="flex items-center gap-3 cursor-pointer hover:bg-gray-100 px-3 py-2 rounded-lg transition"
         >
           <p className="text-sm font-medium text-gray-700">
-            {currentUser?.firstName}
+            {currentUser?.FirstName}
           </p>
           <div className={styles.profileAvatar}>
             <FaUser />
