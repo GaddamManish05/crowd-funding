@@ -50,11 +50,14 @@ function CampaignTable() {
     }
   };
 
+  console.log("is authenticated from dashboard :",isAuthenticated)
   // E. Lifecycle & Side Effects
   useEffect(() => {
     if (!isAuthenticated) return;
     fetchCampaigns();
   }, [isAuthenticated]);
+
+
 
   // F. Derived State / Memoized Values
   const filteredCampaigns = useMemo(() => {
@@ -67,7 +70,7 @@ function CampaignTable() {
       );
     });
   }, [campaigns, search]);
-
+  console.log("filteredCampaigns is :",filteredCampaigns)
   // Early Return Condition for Empty State
   if (filteredCampaigns.length === 0 && !loading) {
     return (
