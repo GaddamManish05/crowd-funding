@@ -151,9 +151,7 @@ export const approveCampaign = async (req, res) => {
 
             `
         };
-
         const data = await apiInstance.sendTransacEmail(sendSmtpEmail);
-
         console.log("CAMPAIGN APPROVAL MAIL SENT:", data);
 
     } catch(err) {

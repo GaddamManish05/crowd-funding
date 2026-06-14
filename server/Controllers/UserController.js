@@ -26,9 +26,15 @@ export const getUserCampaigns = async (req, res) => {
         if (!userId) {
             return res.status(401).json({ message: "Unauthorized" });
         }
-        await CampaignModel.updateMany({DeadLine:{$lt:new Date()},
-            Status:"active"},
-            {$set:{Status:"expired"}});
+        const todayUTC = new Date();
+        todayUTC.setUTCHours(0, 0, 0, 0);
+
+        await CampaignModel.updateMany({
+            DeadLine: { $lt: todayUTC },
+            Status: "active"
+        }, {
+            $set: { Status: "expired" }
+        });
 
         const campaigns = await CampaignModel
             .find({ Owner: userId })

@@ -147,12 +147,15 @@ CommonApi.post("/logout", (req, res) => {
 // get All Campaigns
 CommonApi.get("/campaigns", VerifyToken, async (req, res) => {
     try {
+        const todayUTC = new Date();
+        todayUTC.setUTCHours(0, 0, 0, 0);
+
         await CampaignModel.updateMany(
-            { DeadLine: { $lt: new Date() }, Status: { $nin: ["completed", "reject", "expired"] } },
+            { DeadLine: { $lt: todayUTC }, Status: { $nin: ["completed", "reject", "expired"] } },
             { $set: { Status: "expired" } }
         );
 
-        const campaigns = await CampaignModel.find({ DeadLine: { $gte: new Date() },Status : "active",IsActive:true})
+        const campaigns = await CampaignModel.find({ DeadLine: { $gte: todayUTC },Status : "active",IsActive:true})
             .select("Title Description Category GoalAmount CurrentAmount Status DeadLine ImageUrl")
             .sort({ createdAt: -1 })
             .populate("Owner", "FirstName LastName Email");
@@ -200,7 +203,7 @@ CommonApi.get('/profile-stats', VerifyToken, async (req, res) => {
 
         // created campaigns
         const createdCampaignCount = await CampaignModel.countDocuments({
-            CreatedBy: userId
+            Owner: userId
         });
         
         return res.status(200).json({

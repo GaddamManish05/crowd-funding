@@ -16,8 +16,8 @@ Content-Type: application/json
 
 {
 
-  "Email": "manish@example.com",
-  "Password": "gaddam123"
+  "Email": "saisriman@example.com",
+  "Password": "password"
 }
 
 ###Add campaign API
