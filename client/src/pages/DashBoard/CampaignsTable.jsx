@@ -43,6 +43,8 @@ function CampaignTable() {
 );
 
 console.log("Response payload:", response.data.payload);
+console.log("Payload from API:", response.data.payload);
+console.log("Payload length:", response.data.payload.length);
 
 setCampaigns(response.data.payload);
 
