@@ -38,10 +38,15 @@ function CampaignTable() {
 
     try {
       const response = await axios.get(
-        `${BASE_URL}/common-api/campaigns`,
-        { withCredentials: true }
-      );
-      setCampaigns(response.data?.payload || []);
+  `${BASE_URL}/common-api/campaigns`,
+  { withCredentials: true }
+);
+
+console.log("Response payload:", response.data.payload);
+
+setCampaigns(response.data.payload);
+
+console.log("After setCampaigns:", response.data.payload);
     } catch (err) {
       console.log(err);
       setError(err.response?.data?.message || "Failed to fetch campaigns");
@@ -57,7 +62,9 @@ function CampaignTable() {
     fetchCampaigns();
   }, [isAuthenticated]);
 
-
+  useEffect(() => {
+  console.log("Local campaigns state:", campaigns);
+}, [campaigns]);
 
   // F. Derived State / Memoized Values
   const filteredCampaigns = useMemo(() => {
