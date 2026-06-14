@@ -61,15 +61,21 @@ function CampaignTable() {
 
   // F. Derived State / Memoized Values
   const filteredCampaigns = useMemo(() => {
-    return campaigns.filter((camp) => {
-      const searchText = search.toLowerCase();
-      return (
-        camp.Title?.toLowerCase().includes(searchText) ||
-        camp.Description?.toLowerCase().includes(searchText) ||
-        camp.Status?.toLowerCase().includes(searchText)
-      );
-    });
-  }, [campaigns, search]);
+  console.log("campaigns:", campaigns);
+  console.log("search:", search);
+
+  return campaigns.filter((camp) => {
+    console.log("checking:", camp);
+
+    const searchText = search.toLowerCase();
+
+    return (
+      camp.Title?.toLowerCase().includes(searchText) ||
+      camp.Description?.toLowerCase().includes(searchText) ||
+      camp.Status?.toLowerCase().includes(searchText)
+    );
+  });
+}, [campaigns, search]);
   console.log("filteredCampaigns is :",filteredCampaigns)
   // Early Return Condition for Empty State
   if (filteredCampaigns.length === 0 && !loading) {
